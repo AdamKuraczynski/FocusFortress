@@ -16,8 +16,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.adamkuraczynski.focusfortress.screens.MainContent
+import com.adamkuraczynski.focusfortress.screens.ScreenTimeScreen
 import com.adamkuraczynski.focusfortress.permissions.PermissionScreen
 import com.adamkuraczynski.focusfortress.permissions.PermissionViewModel
+import com.adamkuraczynski.focusfortress.screens.BlockAppScreen
+import com.adamkuraczynski.focusfortress.screens.BlockKeywordScreen
+import com.adamkuraczynski.focusfortress.screens.BlockWebsiteScreen
+import com.adamkuraczynski.focusfortress.screens.LaunchCountScreen
+import com.adamkuraczynski.focusfortress.screens.SelectStrictnessScreen
+import com.adamkuraczynski.focusfortress.screens.TakeABreakScreen
 import com.adamkuraczynski.focusfortress.ui.theme.FocusFortressTheme
 
 /**
@@ -97,7 +104,28 @@ fun MainApp() {
             )
         }
         composable("main") {
-            MainContent()
+            MainContent(navController)
+        }
+        composable("screenTime") {
+            ScreenTimeScreen(navController)
+        }
+        composable("launchCount") {
+            LaunchCountScreen(navController)
+        }
+        composable("blockApp") {
+            BlockAppScreen(navController)
+        }
+        composable("blockWebsite") {
+            BlockWebsiteScreen(navController)
+        }
+        composable("blockKeyword") {
+            BlockKeywordScreen(navController)
+        }
+        composable("takeABreak") {
+            TakeABreakScreen(navController)
+        }
+        composable("selectStrictness") {
+            SelectStrictnessScreen(navController)
         }
     }
 }
