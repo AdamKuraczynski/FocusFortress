@@ -46,7 +46,8 @@ import com.adamkuraczynski.focusfortress.ui.theme.FocusFortressTheme
  *
  * @author Adam Kuraczyński
  * @version 1.7
- */
+ *
+ **/
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,10 +62,11 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainApp() {
-    val navController = rememberNavController()
+    val navController = rememberNavController() //screen moving
     val viewModel: PermissionViewModel = viewModel()
 
-    val hasUsageAccessPermission by viewModel.hasUsageAccessPermission.collectAsState()
+    // observers
+    val hasUsageAccessPermission by viewModel.hasUsageAccessPermission.collectAsState() //short for value
     val hasOverlayPermission by viewModel.hasOverlayPermission.collectAsState()
     val hasNotificationPermission by viewModel.hasNotificationPermission.collectAsState()
 
@@ -83,7 +85,7 @@ fun MainApp() {
         }
     }
 
-    LaunchedEffect(allPermissionsGranted) {
+    LaunchedEffect(allPermissionsGranted) { //watches allPermissionsGranted and acts if it changes
         if (!allPermissionsGranted && navController.currentDestination?.route != "permissions") {
             navController.navigate("permissions") {
                 popUpTo("main") { inclusive = true }

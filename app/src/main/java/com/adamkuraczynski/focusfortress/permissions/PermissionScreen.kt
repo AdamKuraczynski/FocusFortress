@@ -1,5 +1,9 @@
 package com.adamkuraczynski.focusfortress.permissions
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,11 +16,21 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.adamkuraczynski.focusfortress.R
+import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
+import com.adamkuraczynski.focusfortress.ui.theme.Golden
+import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 /**
  * Displays the permission screen where the user can grant necessary permissions.
@@ -57,7 +71,7 @@ fun PermissionScreen(
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
-
+    // observer
     LaunchedEffect(allPermissionsGranted) {
         if (allPermissionsGranted) {
             onPermissionsGranted()
@@ -65,45 +79,63 @@ fun PermissionScreen(
     }
 
     if (!allPermissionsGranted) {
-
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
         ) {
-            Text(
-                text = "Required Permissions",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(bottom = 16.dp)
+            Image(
+                painter = painterResource(id = R.drawable.gate),
+                contentDescription = "Background image",
+                contentScale = ContentScale.Crop, //fit always
+                modifier = Modifier.fillMaxSize()
             )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = "Required Permissions",
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontFamily = MedievalFont,
+                        color = Golden,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 44.sp
+                    ),
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
 
-            PermissionItem(
-                title = "Usage Access",
-                textProvider = UsageAccessPermissionTextProvider(),
-                granted = hasUsageAccessPermission,
-                onClick = { viewModel.requestUsageAccessPermission() },
-            )
+                PermissionItem(
+                    title = "Usage Access",
+                    textProvider = UsageAccessPermissionTextProvider(),
+                    granted = hasUsageAccessPermission,
+                    onClick = { viewModel.requestUsageAccessPermission() },
+                    modifier = Modifier.background(DarkBrown)
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            PermissionItem(
-                title = "Display Over Other Apps",
-                textProvider = OverlayPermissionTextProvider(),
-                granted = hasOverlayPermission,
-                onClick = { viewModel.requestOverlayPermission() },
-            )
+                PermissionItem(
+                    title = "Display Over Other Apps",
+                    textProvider = OverlayPermissionTextProvider(),
+                    granted = hasOverlayPermission,
+                    onClick = { viewModel.requestOverlayPermission() },
+                    modifier = Modifier.background(DarkBrown)
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            PermissionItem(
-                title = "Notification Access",
-                textProvider = NotificationPermissionTextProvider(),
-                granted = hasNotificationPermission,
-                onClick = { viewModel.requestNotificationAccess() },
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
+                PermissionItem(
+                    title = "Notification Access",
+                    textProvider = NotificationPermissionTextProvider(),
+                    granted = hasNotificationPermission,
+                    onClick = { viewModel.requestNotificationAccess() },
+                    modifier = Modifier.background(DarkBrown)
+                )
+            }
         }
     }
 }

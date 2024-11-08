@@ -1,5 +1,8 @@
 package com.adamkuraczynski.focusfortress.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,15 +16,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.adamkuraczynski.focusfortress.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BlockWebsiteScreen(navController: NavController) {
+    val backgroundImage = painterResource(id = R.drawable.kitchen)
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("BlockWebsiteScreen") },
+                title = { Text("Block Website") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -30,11 +38,21 @@ fun BlockWebsiteScreen(navController: NavController) {
             )
         },
         content = { paddingValues ->
+            Box(
 
-            Text(
-                text = "BlockWebsiteScreen",
-                modifier = Modifier.padding(paddingValues).padding(16.dp)
-            )
+            ){
+                Image(
+                    painter = backgroundImage,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                Text(
+                    text = "BlockWebsiteScreen",
+                    modifier = Modifier.padding(paddingValues).padding(16.dp)
+                )
+            }
         }
     )
 }

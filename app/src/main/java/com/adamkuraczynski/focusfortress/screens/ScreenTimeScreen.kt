@@ -1,5 +1,8 @@
 package com.adamkuraczynski.focusfortress.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,11 +16,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.adamkuraczynski.focusfortress.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenTimeScreen(navController: NavController) {
+    val backgroundImage = painterResource(id = R.drawable.stables)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -30,11 +38,21 @@ fun ScreenTimeScreen(navController: NavController) {
             )
         },
         content = { paddingValues ->
+        Box(
+
+        ){
+            Image(
+                painter = backgroundImage,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
 
             Text(
                 text = "Screen Time Screen",
                 modifier = Modifier.padding(paddingValues).padding(16.dp)
             )
+        }
         }
     )
 }

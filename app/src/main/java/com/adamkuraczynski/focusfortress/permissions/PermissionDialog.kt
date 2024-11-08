@@ -1,10 +1,16 @@
 package com.adamkuraczynski.focusfortress.permissions
 
+import androidx.compose.foundation.background
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import com.adamkuraczynski.focusfortress.ui.theme.Golden
+import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 /**
  * Displays a dialog prompting the user to grant a permission.
@@ -35,22 +41,57 @@ fun PermissionDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Text(text = title)
+            Text(
+                text = title,
+                style = TextStyle(
+                    fontFamily = MedievalFont,
+                    fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                    color = Golden
+                )
+            )
         },
         text = {
-            Text(text = description)
+            Text(
+                text = description,
+                style = TextStyle(
+                    fontFamily = MedievalFont,
+                    fontSize = MaterialTheme.typography.bodyLarge.fontSize,
+                    color = Color.White
+                )
+            )
         },
         confirmButton = {
-            TextButton(onClick = onOkClick
+            TextButton(
+                onClick = onOkClick,
+                modifier = Modifier.background(Color(0xFF6D4C41))
             ) {
-                Text("OK")
+                Text(
+                    "OK",
+                    style = TextStyle(
+                        fontFamily = MedievalFont,
+                        color = Color.White,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                    )
+                )
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
+            TextButton(
+                onClick = onDismiss,
+                modifier = Modifier.background(Color(0xFF6D4C41))
+            ) {
+                Text(
+                    "Cancel",
+                    style = TextStyle(
+                        fontFamily = MedievalFont,
+                        color = Color.White,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                    )
+                )
             }
         },
-        modifier = modifier
+        containerColor = Color(0xFF2F2D38),
+        modifier = modifier.background(Color(0xFF3B2F2F))
+
     )
 }

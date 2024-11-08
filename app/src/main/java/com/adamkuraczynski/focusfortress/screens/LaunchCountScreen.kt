@@ -1,5 +1,8 @@
 package com.adamkuraczynski.focusfortress.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,15 +16,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.ui.Modifier
-
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.adamkuraczynski.focusfortress.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LaunchCountScreen(navController: NavController) {
+    val backgroundImage = painterResource(id = R.drawable.barn)
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("LaunchCountScreen") },
+                title = { Text("Launch Count") },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -30,11 +37,21 @@ fun LaunchCountScreen(navController: NavController) {
             )
         },
         content = { paddingValues ->
+            Box(
 
-            Text(
-                text = "LaunchCountScreen",
-                modifier = Modifier.padding(paddingValues).padding(16.dp)
-            )
+            ){
+                Image(
+                    painter = backgroundImage,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                Text(
+                    text = "LaunchCountScreen",
+                    modifier = Modifier.padding(paddingValues).padding(16.dp)
+                )
+            }
         }
     )
 }
