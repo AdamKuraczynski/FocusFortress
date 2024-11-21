@@ -1,13 +1,11 @@
 package com.adamkuraczynski.focusfortress.screens
 
-import android.annotation.SuppressLint
-import com.adamkuraczynski.focusfortress.service.AppUsage
 import com.adamkuraczynski.focusfortress.service.ScreenTimeViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.foundation.layout.Arrangement
@@ -18,9 +16,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,6 +33,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,17 +41,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.drawable.toBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.adamkuraczynski.focusfortress.R
+import com.adamkuraczynski.focusfortress.service.AppItem
+import com.adamkuraczynski.focusfortress.service.MenuItem
+import com.adamkuraczynski.focusfortress.service.SortOptionScreenTime
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 
@@ -62,7 +63,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * The screen includes a styled top bar with navigation controls and period selection options.
  *
  * @author Adam Kuraczyński
- * @version 1.4
+ * @version 1.6
  *
  * @param navController The [NavController] used to navigate between app screens.
  * @param viewModel The [ScreenTimeViewModel] providing app usage data.
@@ -79,6 +80,12 @@ fun ScreenTimeScreen(
 
     var selectedPeriod by remember { mutableStateOf("Day") }
     val appUsageTimes by viewModel.appUsageTimes.collectAsState()
+
+    var selectedSortOption by remember { mutableStateOf(SortOptionScreenTime.UsageTimeDescending) }
+    var minUsageTimeMillis by remember { mutableLongStateOf(0L) }
+
+    var isSortMenuExpanded by remember { mutableStateOf(false) }
+    var isFilterMenuExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -133,7 +140,7 @@ fun ScreenTimeScreen(
                         TextButton(
                             onClick = {
                                 selectedPeriod = period
-                                viewModel.loadAppUsageTimes(selectedPeriod)
+                                viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
                             },
                             colors = ButtonDefaults.textButtonColors(
                                 contentColor = if (selectedPeriod == period) Color(0xFFE0C097) else Color.White
@@ -147,6 +154,111 @@ fun ScreenTimeScreen(
                                     color = if (selectedPeriod == period) Color(0xFFE0C097) else Color.White
                                 )
                             )
+                        }
+                    }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF3B2F2F))
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    // sorting
+                    Box {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.clickable { isSortMenuExpanded = !isSortMenuExpanded }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Sort,
+                                contentDescription = "Sort",
+                                tint = Color.White
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = when (selectedSortOption) {
+                                    SortOptionScreenTime.UsageTimeDescending -> "Launch count ↓"
+                                    SortOptionScreenTime.UsageTimeAscending -> "Launch count ↑"
+                                    SortOptionScreenTime.AppNameAscending -> "App Name A→Z"
+                                    SortOptionScreenTime.AppNameDescending -> "App Name Z→A"
+                                },
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    fontFamily = MedievalFont,
+                                    fontSize = 16.sp,
+                                    color = Color.White
+                                )
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = isSortMenuExpanded,
+                            onDismissRequest = { isSortMenuExpanded = false },
+                        ) {
+                            MenuItem("Usage Time ↓") {
+                                selectedSortOption = SortOptionScreenTime.UsageTimeDescending
+                                viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
+                                isSortMenuExpanded = false
+                            }
+                            MenuItem("Usage Time ↑") {
+                                selectedSortOption = SortOptionScreenTime.UsageTimeAscending
+                                viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
+                                isSortMenuExpanded = false
+                            }
+                            MenuItem("App Name A→Z") {
+                                selectedSortOption = SortOptionScreenTime.AppNameAscending
+                                viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
+                                isSortMenuExpanded = false
+                            }
+                            MenuItem("App Name Z→A") {
+                                selectedSortOption = SortOptionScreenTime.AppNameDescending
+                                viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
+                                isSortMenuExpanded = false
+                            }
+                        }
+                    }
+
+                    // filtering
+                    Box {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.clickable { isFilterMenuExpanded = !isFilterMenuExpanded }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.FilterList,
+                                contentDescription = "Filter",
+                                tint = Color.White
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = when {
+                                    minUsageTimeMillis >= 3600000L -> "${minUsageTimeMillis / 3600000}h+ Usage"
+                                    else -> "${minUsageTimeMillis / 60000}m+ Usage"
+                                },
+                                style = MaterialTheme.typography.bodyLarge.copy(
+                                    fontFamily = MedievalFont,
+                                    fontSize = 16.sp,
+                                    color = Color.White
+                                )
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = isFilterMenuExpanded,
+                            onDismissRequest = { isFilterMenuExpanded = false },
+                        ) {
+                            // Options: 0m, 15m, 1h, 5h
+                            listOf(0L, 900000L, 3600000L, 18000000L).forEach { time ->
+                                MenuItem(
+                                    text = when {
+                                        time >= 3600000L -> "${time / 3600000}h+ Usage"
+                                        else -> "${time / 60000}m+ Usage"
+                                    }
+                                ) {
+                                    minUsageTimeMillis = time
+                                    viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
+                                    isFilterMenuExpanded = false
+                                }
+                            }
                         }
                     }
                 }
@@ -177,81 +289,10 @@ fun ScreenTimeScreen(
                         .padding(16.dp)
                 ) {
                     items(appUsageTimes) { app ->
-                        AppUsageItem(app)
+                        AppItem(app)
                     }
                 }
             }
         }
     )
-}
-
-/**
- * Displays a single app usage item in the list.
- *
- * This composable function shows the app's icon, name, and total usage time formatted as hours, minutes, and seconds.
- *
- * @param app The [AppUsage] object containing the app's usage details.
- *
- */
-@Composable
-fun AppUsageItem(app: AppUsage) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .background(Color(0xFF6D4C41), shape = RoundedCornerShape(8.dp))
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (app.appIcon != null) {
-            Image(
-                bitmap = app.appIcon.toBitmap().asImageBitmap(),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            )
-        } else {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(Color.Gray, shape = RoundedCornerShape(8.dp))
-            )
-        }
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = app.appName,
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontFamily = MedievalFont,
-                fontSize = 20.sp,
-                color = Color.White
-            ),
-            modifier = Modifier.weight(1f)
-        )
-        Text(
-            text = formatTime(app.usageTimeMillis),
-            style = MaterialTheme.typography.bodyLarge.copy(
-                fontFamily = MedievalFont,
-                fontSize = 20.sp,
-                color = Color(0xFFE0C097)
-            )
-        )
-    }
-}
-
-/**
- * Formats time in milliseconds to a string in the format "HH:mm:ss".
- *
- * @param timeMillis The time in milliseconds.
- * @return A formatted time string.
- *
- */
-@SuppressLint("DefaultLocale")
-fun formatTime(timeMillis: Long): String {
-    val totalSeconds = timeMillis / 1000
-    val hours = totalSeconds / 3600
-    val minutes = (totalSeconds % 3600) / 60
-    val seconds = totalSeconds % 60
-
-    return String.format("%02d:%02d:%02d", hours, minutes, seconds)
 }

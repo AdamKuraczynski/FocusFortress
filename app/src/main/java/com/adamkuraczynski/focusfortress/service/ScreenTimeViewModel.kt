@@ -17,6 +17,13 @@ data class AppUsage(
     val appIcon: android.graphics.drawable.Drawable? = null
 )
 
+enum class SortOptionScreenTime {
+    UsageTimeDescending,
+    UsageTimeAscending,
+    AppNameAscending,
+    AppNameDescending
+}
+
 /**
  * ViewModel responsible for managing app usage times over different time periods.
  *
@@ -25,7 +32,7 @@ data class AppUsage(
  * The processed data is exposed as a `StateFlow` for observation in the UI.
  *
  * @author Adam Kuraczyński
- * @version 1.3
+ * @version 1.5
  *
  * @param application The [Application] context used to access system services and resources.
  *
@@ -44,7 +51,11 @@ class ScreenTimeViewModel(application: Application) : AndroidViewModel(applicati
         loadAppUsageTimes("Day")
     }
 
-    fun loadAppUsageTimes(period: String) {
+    fun loadAppUsageTimes(
+        period: String,
+        sortOption: SortOptionScreenTime = SortOptionScreenTime.UsageTimeDescending,
+        minUsageTimeMillis: Long = 0
+    ) {
         viewModelScope.launch {
             val endTime = System.currentTimeMillis()
             val startTime = when (period) {
@@ -89,9 +100,17 @@ class ScreenTimeViewModel(application: Application) : AndroidViewModel(applicati
                 } catch (e: PackageManager.NameNotFoundException) {
                     null
                 }
-            }.sortedByDescending { it.usageTimeMillis }
+            }
 
-            _appUsageTimes.value = appUsageList
+            val filteredApps = appUsageList.filter { it.usageTimeMillis >= minUsageTimeMillis }
+            val sortedApps = when (sortOption) {
+                SortOptionScreenTime.UsageTimeDescending -> filteredApps.sortedByDescending { it.usageTimeMillis }
+                SortOptionScreenTime.UsageTimeAscending -> filteredApps.sortedBy { it.usageTimeMillis }
+                SortOptionScreenTime.AppNameAscending -> filteredApps.sortedBy { it.appName }
+                SortOptionScreenTime.AppNameDescending -> filteredApps.sortedByDescending { it.appName }
+            }
+            _appUsageTimes.value = sortedApps
+
         }
     }
 

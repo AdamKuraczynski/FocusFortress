@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.material.icons.extended)
 
     testImplementation(libs.junit)
     //androidTestImplementation(libs.androidx.junit)

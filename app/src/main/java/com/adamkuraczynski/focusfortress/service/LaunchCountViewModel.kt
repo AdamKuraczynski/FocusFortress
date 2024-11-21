@@ -18,6 +18,13 @@ data class AppLaunchCount(
     val appIcon: android.graphics.drawable.Drawable? = null
 )
 
+enum class SortOptionLaunchCount {
+    LaunchCountDescending,
+    LaunchCountAscending,
+    AppNameAscending,
+    AppNameDescending
+}
+
 /**
  * ViewModel responsible for managing app launch counts over different time periods.
  *
@@ -26,7 +33,7 @@ data class AppLaunchCount(
  * The processed data is exposed as a `StateFlow` for observation in the UI.
  *
  * @author Adam Kuraczyński
- * @version 1.6
+ * @version 1.7
  *
  * @param application The [Application] context used to access system services and resources.
  *
@@ -47,7 +54,11 @@ class LaunchCountViewModel(application: Application) : AndroidViewModel(applicat
         loadAppLaunchCounts("Day")
     }
 
-    fun loadAppLaunchCounts(period: String) {
+    fun loadAppLaunchCounts(
+        period: String,
+        sortOptionLaunchCount: SortOptionLaunchCount = SortOptionLaunchCount.LaunchCountDescending,
+        minLaunchCount: Int = 0
+    ) {
         viewModelScope.launch {
             val endTime = System.currentTimeMillis()
             val startTime = when (period) {
@@ -96,7 +107,16 @@ class LaunchCountViewModel(application: Application) : AndroidViewModel(applicat
                 }
             }.sortedByDescending { it.launchCount }
 
-            _appLaunchCounts.value = appLaunchCountList
+            val filteredApps = appLaunchCountList.filter { it.launchCount >= minLaunchCount }
+
+            val sortedApps = when (sortOptionLaunchCount) {
+                SortOptionLaunchCount.LaunchCountDescending -> filteredApps.sortedByDescending { it.launchCount }
+                SortOptionLaunchCount.LaunchCountAscending -> filteredApps.sortedBy { it.launchCount }
+                SortOptionLaunchCount.AppNameAscending -> filteredApps.sortedBy { it.appName }
+                SortOptionLaunchCount.AppNameDescending -> filteredApps.sortedByDescending { it.appName }
+            }
+
+            _appLaunchCounts.value = sortedApps
         }
     }
 
