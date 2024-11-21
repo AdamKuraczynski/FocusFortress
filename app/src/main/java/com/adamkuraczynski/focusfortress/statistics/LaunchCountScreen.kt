@@ -1,6 +1,5 @@
-package com.adamkuraczynski.focusfortress.screens
+package com.adamkuraczynski.focusfortress.statistics
 
-import com.adamkuraczynski.focusfortress.service.LaunchCountViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -49,9 +48,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.adamkuraczynski.focusfortress.R
-import com.adamkuraczynski.focusfortress.service.AppItem
-import com.adamkuraczynski.focusfortress.service.MenuItem
-import com.adamkuraczynski.focusfortress.service.SortOptionLaunchCount
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 /**

@@ -1,4 +1,4 @@
-package com.adamkuraczynski.focusfortress.service
+package com.adamkuraczynski.focusfortress.statistics
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image

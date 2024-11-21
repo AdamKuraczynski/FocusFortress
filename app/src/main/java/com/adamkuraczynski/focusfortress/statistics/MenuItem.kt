@@ -1,4 +1,4 @@
-package com.adamkuraczynski.focusfortress.service
+package com.adamkuraczynski.focusfortress.statistics
 
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme

@@ -1,4 +1,4 @@
-package com.adamkuraczynski.focusfortress.service
+package com.adamkuraczynski.focusfortress.statistics
 
 import android.app.Application
 import android.app.usage.UsageEvents
