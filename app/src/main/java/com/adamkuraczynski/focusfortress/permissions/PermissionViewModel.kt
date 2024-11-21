@@ -56,7 +56,7 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
 
     private fun checkUsageAccessPermission(): Boolean {
         val appOpsManager = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-        val mode = appOpsManager.checkOpNoThrow(
+        val mode = appOpsManager.unsafeCheckOpNoThrow(
             AppOpsManager.OPSTR_GET_USAGE_STATS,
             android.os.Process.myUid(),
             context.packageName
