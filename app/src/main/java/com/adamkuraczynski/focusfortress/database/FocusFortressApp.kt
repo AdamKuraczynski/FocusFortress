@@ -16,6 +16,7 @@ class FocusFortressApp : Application() {
             applicationContext,
             AppDatabase::class.java,
             "focus_fortress_database"
-        ).build()
+        )   .fallbackToDestructiveMigration()
+            .build()
     }
 }

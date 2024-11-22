@@ -25,7 +25,8 @@ import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 @Composable
-fun BlockedAppScreen(onExit: () -> Unit) {
+fun BlockedScreen(blockType: String, onExit: () -> Unit) {
+    val message = if (blockType == "app") "App blocked by" else "Website blocked by"
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -38,7 +39,7 @@ fun BlockedAppScreen(onExit: () -> Unit) {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "App blocked by",
+                text = message,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     color = Color.White,
                     fontSize = 24.sp,

@@ -6,12 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.adamkuraczynski.focusfortress.ui.theme.FocusFortressTheme
 
-class BlockedAppActivity : ComponentActivity() {
+class BlockedActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val blockType = intent.getStringExtra("BLOCK_TYPE") ?: "app"
         setContent {
             FocusFortressTheme {
-                BlockedAppScreen(
+                BlockedScreen(
+                    blockType = blockType,
                     onExit = {
                         goToHomeScreen()
                     }
