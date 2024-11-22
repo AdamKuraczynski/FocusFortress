@@ -8,7 +8,7 @@ package com.adamkuraczynski.focusfortress.permissions
  * of this interface supply the specific text related to each permission.
  *
  * @author Adam Kuraczyński
- * @version 1.5
+ * @version 1.6
  *
  **/
 
@@ -46,3 +46,15 @@ class NotificationPermissionTextProvider : PermissionTextProvider {
         return "We need Notification Access to monitor and manage your notifications."
     }
 }
+
+class AccessibilityPermissionTextProvider : PermissionTextProvider {
+    override fun getItemDescription(): String {
+        return "Monitor your device's screen."
+    }
+
+    override fun getDialogDescription(): String {
+        return "We need Accessibility permission to allow app blocking and screen monitoring."
+    }
+
+}
+

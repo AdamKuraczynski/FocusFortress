@@ -39,7 +39,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * If not, it presents a list of permissions that the user needs to grant, along with options to request them.
  *
  * @author Adam Kuraczyński
- * @version 1.5
+ * @version 1.6
  *
  * @param viewModel The [PermissionViewModel] that handles the permission logic and state.
  * @param onPermissionsGranted A callback function invoked when all permissions have been granted.
@@ -54,8 +54,9 @@ fun PermissionScreen(
     val hasUsageAccessPermission by viewModel.hasUsageAccessPermission.collectAsState()
     val hasOverlayPermission by viewModel.hasOverlayPermission.collectAsState()
     val hasNotificationPermission by viewModel.hasNotificationPermission.collectAsState()
+    val hasAccessibilityPermission by viewModel.hasAccessibilityPermission.collectAsState()
 
-    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission && hasNotificationPermission
+    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission && hasNotificationPermission && hasAccessibilityPermission
 
     // permissions update each time the screen is resumed
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -132,6 +133,16 @@ fun PermissionScreen(
                     textProvider = NotificationPermissionTextProvider(),
                     granted = hasNotificationPermission,
                     onClick = { viewModel.requestNotificationAccess() },
+                    modifier = Modifier.background(DarkBrown)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                PermissionItem(
+                    title = "Accessibility Access",
+                    textProvider = AccessibilityPermissionTextProvider(),
+                    granted = hasAccessibilityPermission,
+                    onClick = { viewModel.requestPermissionAccess() },
                     modifier = Modifier.background(DarkBrown)
                 )
             }

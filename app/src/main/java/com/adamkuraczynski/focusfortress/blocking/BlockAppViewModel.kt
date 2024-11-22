@@ -26,8 +26,8 @@ class BlockAppViewModel : ViewModel() {
         }
     }
 
-    suspend fun isAppBlocked(packageName: String): Boolean {
-        return blockedAppDao.isAppBlocked(packageName)
-    }
+//    suspend fun isAppBlocked(packageName: String): Boolean {
+//        return blockedAppDao.isAppBlocked(packageName)
+//    }
 
 }

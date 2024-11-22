@@ -45,7 +45,7 @@ import com.adamkuraczynski.focusfortress.blocking.BlockAppScreen
  * - Automatically navigates to the permissions screen if permissions are revoked.
  *
  * @author Adam Kuraczyński
- * @version 1.7
+ * @version 1.8
  *
  **/
 
@@ -69,8 +69,9 @@ fun MainApp() {
     val hasUsageAccessPermission by viewModel.hasUsageAccessPermission.collectAsState() //short for value
     val hasOverlayPermission by viewModel.hasOverlayPermission.collectAsState()
     val hasNotificationPermission by viewModel.hasNotificationPermission.collectAsState()
+    val hasAccessibilityPermission by viewModel.hasAccessibilityPermission.collectAsState()
 
-    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission && hasNotificationPermission
+    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission && hasNotificationPermission && hasAccessibilityPermission
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {

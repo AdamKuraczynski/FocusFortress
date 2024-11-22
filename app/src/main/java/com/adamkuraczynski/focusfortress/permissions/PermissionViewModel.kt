@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
  * and provides methods to request permissions when needed.
  *
  * @author Adam Kuraczyński
- * @version 1.7
+ * @version 1.8
  *
  * @constructor Creates a [PermissionViewModel] with the given application context.
  *
@@ -46,11 +46,15 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
     private val localHasNotificationPermission = MutableStateFlow(checkNotificationListenerPermission())
     val hasNotificationPermission: StateFlow<Boolean> = localHasNotificationPermission
 
+    private val localHasAccessibilityPermission = MutableStateFlow(checkAccessibilityServicePermission())
+    val hasAccessibilityPermission: StateFlow<Boolean> = localHasAccessibilityPermission
+
     fun updatePermissionsStatus() {
         viewModelScope.launch {
             localHasUsageAccessPermission.value = checkUsageAccessPermission()
             localHasOverlayPermission.value = checkOverlayPermission()
             localHasNotificationPermission.value = checkNotificationListenerPermission()
+            localHasAccessibilityPermission.value = checkAccessibilityServicePermission()
         }
     }
 
@@ -76,6 +80,14 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
         return enabledListeners != null && enabledListeners.contains(context.packageName)
     }
 
+    private fun checkAccessibilityServicePermission(): Boolean {
+        val enabledServices = Settings.Secure.getString(
+            context.contentResolver,
+            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+        )
+        return enabledServices != null && enabledServices.contains(context.packageName)
+    }
+
     fun requestUsageAccessPermission() {
         val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -91,6 +103,12 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
 
     fun requestNotificationAccess() {
         val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
+
+    fun requestPermissionAccess() {
+        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
