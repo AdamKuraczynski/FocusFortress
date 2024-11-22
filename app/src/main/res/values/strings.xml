@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FocusFortress</string>
+    <string name="accessibility_service_description">Focus Fortress Accessibility Service</string>
 </resources>

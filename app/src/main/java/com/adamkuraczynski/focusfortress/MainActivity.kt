@@ -18,7 +18,6 @@ import androidx.navigation.compose.rememberNavController
 import com.adamkuraczynski.focusfortress.screens.MainContent
 import com.adamkuraczynski.focusfortress.permissions.PermissionScreen
 import com.adamkuraczynski.focusfortress.permissions.PermissionViewModel
-import com.adamkuraczynski.focusfortress.screens.BlockAppScreen
 import com.adamkuraczynski.focusfortress.screens.BlockKeywordScreen
 import com.adamkuraczynski.focusfortress.screens.BlockWebsiteScreen
 import com.adamkuraczynski.focusfortress.screens.SelectStrictnessScreen
@@ -26,6 +25,7 @@ import com.adamkuraczynski.focusfortress.screens.TakeABreakScreen
 import com.adamkuraczynski.focusfortress.statistics.LaunchCountScreen
 import com.adamkuraczynski.focusfortress.statistics.ScreenTimeScreen
 import com.adamkuraczynski.focusfortress.ui.theme.FocusFortressTheme
+import com.adamkuraczynski.focusfortress.blocking.BlockAppScreen
 
 /**
  * The main entry point of the FocusFortress application.
@@ -115,7 +115,7 @@ fun MainApp() {
             LaunchCountScreen(navController)
         }
         composable("blockApp") {
-            BlockAppScreen(navController)
+            BlockAppScreen(navController = navController)
         }
         composable("blockWebsite") {
             BlockWebsiteScreen(navController)

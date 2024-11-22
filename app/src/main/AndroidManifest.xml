@@ -17,6 +17,7 @@
 
 
     <application
+        android:name=".database.FocusFortressApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -27,6 +28,17 @@
         android:theme="@style/Theme.FocusFortress"
         tools:targetApi="31">
 
+        <service
+            android:name=".service.AppBlockerService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
 
         <service
             android:name=".service.MyNotificationListenerService"
@@ -49,6 +61,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Important! Missing Declaration and because of that app would not get blocked -->
+        <activity
+            android:name=".blocking.BlockedAppActivity"
+            android:exported="false"
+            android:theme="@style/Theme.FocusFortress" />
+
     </application>
 
 </manifest>
