@@ -7,6 +7,9 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -50,6 +53,11 @@ class LaunchCountViewModel(application: Application) : AndroidViewModel(applicat
         application.getSystemService(Application.USAGE_STATS_SERVICE) as UsageStatsManager
     private val packageManager = application.packageManager
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private var loadJob: Job? = null
+
     init {
         loadAppLaunchCounts("Day")
     }
@@ -59,7 +67,10 @@ class LaunchCountViewModel(application: Application) : AndroidViewModel(applicat
         sortOptionLaunchCount: SortOptionLaunchCount = SortOptionLaunchCount.LaunchCountDescending,
         minLaunchCount: Int = 0
     ) {
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch(Dispatchers.IO) {
+            delay(300)
+            _isLoading.value = true
             val endTime = System.currentTimeMillis()
             val startTime = when (period) {
                 "Day" -> endTime - (1 * 24 * 60 * 60 * 1000)
@@ -117,6 +128,7 @@ class LaunchCountViewModel(application: Application) : AndroidViewModel(applicat
             }
 
             _appLaunchCounts.value = sortedApps
+            _isLoading.value = false
         }
     }
 

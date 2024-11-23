@@ -19,6 +19,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -83,6 +84,8 @@ fun LaunchCountScreen(
     // dropdown
     var isSortMenuExpanded by remember { mutableStateOf(false) }
     var isFilterMenuExpanded by remember { mutableStateOf(false) }
+
+    val isLoading by viewModel.isLoading.collectAsState()
 
     Scaffold(
         topBar = {
@@ -268,26 +271,36 @@ fun LaunchCountScreen(
                         .background(Color.Black.copy(alpha = 0.5f))
                 )
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                ) {
-                    LazyColumn(
+                if (isLoading) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 16.dp)
+                            .padding(paddingValues)
                     ) {
-                        items(
-                            items = appLaunchCounts,
-                            key = {
-                                it.packageName
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 16.dp)
+                        ) {
+                            items(
+                                items = appLaunchCounts,
+                                key = {
+                                    it.packageName
+                                }
+                            ) { app ->
+                                AppItem(app)
                             }
-                        ) { app ->
-                            AppItem(app)
                         }
                     }
                 }
+
             }
         }
 

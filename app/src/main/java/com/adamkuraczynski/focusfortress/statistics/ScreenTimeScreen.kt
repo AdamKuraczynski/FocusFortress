@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -82,6 +83,8 @@ fun ScreenTimeScreen(
 
     var isSortMenuExpanded by remember { mutableStateOf(false) }
     var isFilterMenuExpanded by remember { mutableStateOf(false) }
+
+    val isLoading by viewModel.isLoading.collectAsState()
 
     Scaffold(
         topBar = {
@@ -279,18 +282,27 @@ fun ScreenTimeScreen(
                         .background(Color.Black.copy(alpha = 0.5f))
                 )
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                ) {
-                    items(
-                        items = appUsageTimes,
-                        key = {
-                            it.appName
+                if (isLoading) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp)
+                    ) {
+                        items(
+                            items = appUsageTimes,
+                            key = {
+                                it.appName
+                            }
+                        ) { app ->
+                            AppItem(app)
                         }
-                    ) { app ->
-                        AppItem(app)
                     }
                 }
             }

@@ -1,6 +1,5 @@
 package com.adamkuraczynski.focusfortress.blocking
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,21 +25,20 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.adamkuraczynski.focusfortress.R
 import com.adamkuraczynski.focusfortress.database.BlockedWebsite
-import kotlinx.coroutines.flow.collectLatest
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 
@@ -51,13 +49,12 @@ fun BlockWebsiteScreen(
     viewModel: BlockWebsiteViewModel = viewModel()
 ) {
     val backgroundImage = painterResource(id = R.drawable.kitchen)
-    val context = LocalContext.current
-    var websiteInput by remember { mutableStateOf("") }
-    var blockedWebsites by remember { mutableStateOf(emptyList<BlockedWebsite>()) }
+    var searchAndWebsiteInput by rememberSaveable { mutableStateOf("") }
+    val blockedWebsites by viewModel.blockedWebsites.collectAsState(initial = emptyList())
 
-    LaunchedEffect(Unit) {
-        viewModel.blockedWebsites.collectLatest { blockedList ->
-            blockedWebsites = blockedList
+    val filteredWebsites = remember(blockedWebsites, searchAndWebsiteInput) {
+        blockedWebsites.filter {
+            it.domain.contains(searchAndWebsiteInput, ignoreCase = true)
         }
     }
 
@@ -73,7 +70,7 @@ fun BlockWebsiteScreen(
             )
         },
         content = { paddingValues ->
-            Box{
+            Box {
                 Image(
                     painter = backgroundImage,
                     contentDescription = null,
@@ -82,28 +79,25 @@ fun BlockWebsiteScreen(
                 )
 
                 Column(
-                    modifier = Modifier.padding(paddingValues).padding(16.dp)
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .padding(16.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         OutlinedTextField(
-                            value = websiteInput,
-                            onValueChange = { websiteInput = it },
+                            value = searchAndWebsiteInput,
+                            onValueChange = { searchAndWebsiteInput = it },
                             label = { Text("Enter website URL or domain") },
                             modifier = Modifier.weight(1f)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Button(onClick = {
-                            if (websiteInput.isNotBlank()) {
-                                viewModel.blockWebsite(websiteInput.trim())
-                                websiteInput = ""
-                                Toast.makeText(
-                                    context,
-                                    "Website added to block list",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                            if (searchAndWebsiteInput.isNotBlank()) {
+                                viewModel.blockWebsite(searchAndWebsiteInput.trim())
+                                searchAndWebsiteInput = ""
                             }
                         }) {
                             Text("Add")
@@ -112,17 +106,24 @@ fun BlockWebsiteScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    LazyColumn {
-                        items(
-                            items = blockedWebsites,
-                            key = {
-                                it.id
+                    if (blockedWebsites.isEmpty()) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text("No blocked websites")
+                        }
+                    } else {
+                        LazyColumn {
+                            items(
+                                items = filteredWebsites,
+                                key = { it.domain }
+                            ) { blockedWebsite ->
+                                WebsiteItem(
+                                    blockedWebsite = blockedWebsite,
+                                    onUnblock = { viewModel.unblockWebsite(blockedWebsite) }
+                                )
                             }
-                        ) { blockedWebsite ->
-                            WebsiteItem(
-                                blockedWebsite = blockedWebsite,
-                                onUnblock = { viewModel.unblockWebsite(blockedWebsite) }
-                            )
                         }
                     }
                 }
@@ -130,6 +131,7 @@ fun BlockWebsiteScreen(
         }
     )
 }
+
 
 @Composable
 fun WebsiteItem(blockedWebsite: BlockedWebsite, onUnblock: () -> Unit) {
