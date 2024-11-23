@@ -1,17 +1,58 @@
 package com.adamkuraczynski.focusfortress.blocking
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.adamkuraczynski.focusfortress.database.BlockedApp
 import com.adamkuraczynski.focusfortress.database.FocusFortressApp
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class BlockAppViewModel : ViewModel() {
+data class AppInfo(
+    val packageName: String,
+    val appName: String,
+    val appIcon: Drawable
+)
 
+
+class BlockAppViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val packageManager = application.packageManager
     private val blockedAppDao = FocusFortressApp.database.blockedAppDao()
 
-    val blockedApps: Flow<List<BlockedApp>> = blockedAppDao.getBlockedApps()
+    private val _installedApps = MutableStateFlow<List<AppInfo>>(emptyList())
+    val installedApps: StateFlow<List<AppInfo>> get() = _installedApps
+
+    val blockedApps: StateFlow<List<BlockedApp>> = blockedAppDao.getBlockedApps()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    init {
+        fetchInstalledApps()
+    }
+
+    private fun fetchInstalledApps() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+            val apps = packages.filter {
+                packageManager.getLaunchIntentForPackage(it.packageName) != null
+            }.map { appInfo ->
+                val appName = packageManager.getApplicationLabel(appInfo).toString()
+                val appIcon = packageManager.getApplicationIcon(appInfo.packageName)
+                AppInfo(
+                    packageName = appInfo.packageName,
+                    appName = appName,
+                    appIcon = appIcon
+                )
+            }.sortedByDescending { it.appName } // z -> a
+            _installedApps.value = apps
+        }
+    }
 
     fun blockApp(packageName: String, appName: String) {
         viewModelScope.launch {

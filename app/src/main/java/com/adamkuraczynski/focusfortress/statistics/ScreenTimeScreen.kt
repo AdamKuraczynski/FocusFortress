@@ -284,7 +284,12 @@ fun ScreenTimeScreen(
                         .fillMaxSize()
                         .padding(16.dp)
                 ) {
-                    items(appUsageTimes) { app ->
+                    items(
+                        items = appUsageTimes,
+                        key = {
+                            it.appName
+                        }
+                    ) { app ->
                         AppItem(app)
                     }
                 }

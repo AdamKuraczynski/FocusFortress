@@ -113,7 +113,12 @@ fun BlockWebsiteScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     LazyColumn {
-                        items(blockedWebsites) { blockedWebsite ->
+                        items(
+                            items = blockedWebsites,
+                            key = {
+                                it.id
+                            }
+                        ) { blockedWebsite ->
                             WebsiteItem(
                                 blockedWebsite = blockedWebsite,
                                 onUnblock = { viewModel.unblockWebsite(blockedWebsite) }

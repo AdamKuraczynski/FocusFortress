@@ -278,7 +278,12 @@ fun LaunchCountScreen(
                             .fillMaxSize()
                             .padding(horizontal = 16.dp)
                     ) {
-                        items(appLaunchCounts) { app ->
+                        items(
+                            items = appLaunchCounts,
+                            key = {
+                                it.packageName
+                            }
+                        ) { app ->
                             AppItem(app)
                         }
                     }
