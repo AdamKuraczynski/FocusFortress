@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -237,7 +239,7 @@ fun StyledIconButton(
         shape = shape,
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
         modifier = modifier
-            .height(80.dp)
+            .wrapContentHeight()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -247,18 +249,24 @@ fun StyledIconButton(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(70.dp)
-                    .clip(RoundedCornerShape(24.dp))
+                    .size(50.dp)
+                    .clip(RoundedCornerShape(16.dp))
             )
+
             Spacer(modifier = Modifier.width(8.dp))
+
             Text(
                 text = text,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontFamily = MedievalFont,
                     fontSize = 22.sp
                 ),
-                modifier = Modifier.align(Alignment.CenterVertically),
-                textAlign = TextAlign.Center
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .weight(1f),
+                textAlign = TextAlign.Center,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }
