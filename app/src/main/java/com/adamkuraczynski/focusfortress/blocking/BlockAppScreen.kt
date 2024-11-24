@@ -21,6 +21,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -71,6 +73,21 @@ fun BlockAppScreen(
     val installedApps by viewModel.installedApps.collectAsState()
     val blockedApps by viewModel.blockedApps.collectAsState()
     var searchText by rememberSaveable { mutableStateOf("") }
+    var showOnlyBlocked by rememberSaveable { mutableStateOf(false) }
+
+    // not in viewmodel because it is a ui state
+    val filteredApps = remember(installedApps, blockedApps, showOnlyBlocked, searchText) {
+        installedApps
+            .let { apps ->
+                if (showOnlyBlocked) {
+                    val blockedPackageNames = blockedApps.map { it.packageName }
+                    apps.filter { it.packageName in blockedPackageNames }
+                } else {
+                    apps
+                }
+            }
+            .filter { it.appName.contains(searchText, ignoreCase = true) }
+    }
 
     Scaffold(
         topBar = {
@@ -134,7 +151,7 @@ fun BlockAppScreen(
                         },
                         modifier = Modifier
                             .weight(1f)
-                            .padding(horizontal = 16.dp)
+                            .padding(horizontal = 8.dp)
                             .border(
                                 width = 3.dp,
                                 color = Color.Black,
@@ -153,38 +170,60 @@ fun BlockAppScreen(
                             disabledIndicatorColor = Color.Transparent,
                         )
                     )
+
+                    Checkbox(
+                        checked = showOnlyBlocked,
+                        onCheckedChange = { showOnlyBlocked = it },
+                        colors = CheckboxDefaults.colors(
+                            checkmarkColor = Color(0xFFE0C097),
+                            uncheckedColor = Color(0xFF6D4C41),
+                            checkedColor = Color(0xFF6D4C41)
+                        )
+                    )
+                    Text(
+                        text = "Blocked",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontFamily = MedievalFont,
+                            fontSize = 16.sp,
+                            color = Golden
+                        )
+                    )
                 }
             }
         },
         content = { paddingValues ->
-            if (installedApps.isEmpty()) {
-                // Show loading spinner
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            } else {
-                Box {
-                    Image(
-                        painter = backgroundImage,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Image(
+                    painter = backgroundImage,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
 
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.5f))
+                )
+
+
+                if (installedApps.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                } else {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(paddingValues)
                             .padding(16.dp)
                     ) {
-                        val filteredApps = remember(installedApps, searchText) {
-                            installedApps.filter {
-                                it.appName.contains(searchText, ignoreCase = true)
-                            }
-                        }
 
                         if (filteredApps.isEmpty()) {
                             Box(
