@@ -26,7 +26,11 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 @Composable
 fun BlockedScreen(blockType: String, onExit: () -> Unit) {
-    val message = if (blockType == "app") "App blocked by" else "Website blocked by"
+    val message = when (blockType) {
+        "app" -> "App blocked by"
+        "website" -> "Website blocked by"
+        else -> "Content blocked due to keyword"
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()

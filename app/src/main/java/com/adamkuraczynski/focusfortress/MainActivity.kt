@@ -18,7 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.adamkuraczynski.focusfortress.screens.MainContent
 import com.adamkuraczynski.focusfortress.permissions.PermissionScreen
 import com.adamkuraczynski.focusfortress.permissions.PermissionViewModel
-import com.adamkuraczynski.focusfortress.screens.BlockKeywordScreen
+import com.adamkuraczynski.focusfortress.blocking.BlockKeywordScreen
 import com.adamkuraczynski.focusfortress.blocking.BlockWebsiteScreen
 import com.adamkuraczynski.focusfortress.screens.SelectStrictnessScreen
 import com.adamkuraczynski.focusfortress.screens.TakeABreakScreen
@@ -45,7 +45,7 @@ import com.adamkuraczynski.focusfortress.blocking.BlockAppScreen
  * - Automatically navigates to the permissions screen if permissions are revoked.
  *
  * @author Adam Kuraczyński
- * @version 1.9
+ * @version 1.10
  *
  **/
 
@@ -122,7 +122,7 @@ fun MainApp() {
             BlockWebsiteScreen(navController = navController)
         }
         composable("blockKeyword") {
-            BlockKeywordScreen(navController)
+            BlockKeywordScreen(navController = navController)
         }
         composable("takeABreak") {
             TakeABreakScreen(navController)

@@ -14,7 +14,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
-
+import kotlinx.coroutines.flow.firstOrNull
 
 class BlockerService : AccessibilityService() {
 
@@ -23,6 +23,8 @@ class BlockerService : AccessibilityService() {
     private var lastBlockedPackageName: String? = null
     private var lastBlockedDomain: String? = null
     private var lastBlockedTimestamp: Long = 0
+
+    private var lastBlockedKeyword: String? = null
 
     data class SupportedBrowserConfig(
         val packageName: String,
@@ -68,6 +70,7 @@ class BlockerService : AccessibilityService() {
                 } else {
                     handleAppEvent(event)
                 }
+                handleKeywordBlocking(event)
             }
         }
     }
@@ -191,6 +194,113 @@ class BlockerService : AccessibilityService() {
         } catch (e: Exception) {
             Log.e("BlockerService", "Error in extractDomain: ${e.message}", e)
             null
+        }
+    }
+
+    private fun handleKeywordBlocking(event: AccessibilityEvent) {
+        val packageName = event.packageName?.toString() ?: run {
+            Log.d("BlockerService", "Event packageName is null. Skipping keyword blocking.")
+            return
+        }
+
+        Log.d("BlockerService", "Received AccessibilityEvent from package: $packageName, EventType: ${event.eventType}")
+
+        if (packageName == this.packageName) {
+            Log.d("BlockerService", "Ignoring keyword blocking for own app: $packageName")
+            return
+        }
+
+        val source = event.source
+        if (source == null) {
+            Log.d("BlockerService", "AccessibilityEvent source is null for package: $packageName. Skipping keyword blocking.")
+            return
+        }
+
+        Log.d("BlockerService", "Processing keyword blocking for package: $packageName")
+
+        serviceScope.launch {
+            try {
+                val blockedKeywords = FocusFortressApp.database.blockedKeywordDao().getBlockedKeywords().firstOrNull()
+                Log.d("BlockerService", "Fetched blocked keywords: $blockedKeywords")
+
+                if (blockedKeywords.isNullOrEmpty()) {
+                    Log.d("BlockerService", "No blocked keywords found. Skipping keyword blocking.")
+                    return@launch
+                }
+
+                val text = extractText(source)
+                Log.d("BlockerService", "Extracted text from AccessibilityNodeInfo: \"$text\"")
+
+                if (text.isNullOrBlank()) {
+                    Log.d("BlockerService", "Extracted text is blank. Skipping keyword blocking.")
+                    return@launch
+                }
+
+                val normalizedText = text.lowercase(Locale.getDefault())
+                Log.d("BlockerService", "Normalized extracted text: \"$normalizedText\"")
+
+                val matchedKeyword = blockedKeywords.find { keyword ->
+                    val contains = normalizedText.contains(keyword.keyword)
+                    Log.d("BlockerService", "Checking if \"$normalizedText\" contains \"${keyword.keyword}\": $contains")
+                    contains
+                }
+
+                if (matchedKeyword != null) {
+                    Log.d("BlockerService", "Matched blocked keyword: \"${matchedKeyword.keyword}\"")
+
+                    withContext(Dispatchers.Main) {
+                        if (matchedKeyword.keyword == lastBlockedKeyword && System.currentTimeMillis() - lastBlockedTimestamp < 3000) {
+                            Log.d(
+                                "BlockerService",
+                                "Duplicate block detected for keyword: \"${matchedKeyword.keyword}\". Skipping."
+                            )
+                            return@withContext
+                        }
+
+                        lastBlockedKeyword = matchedKeyword.keyword
+                        lastBlockedTimestamp = System.currentTimeMillis()
+                        Log.d(
+                            "BlockerService",
+                            "Blocking keyword: \"${matchedKeyword.keyword}\". Timestamp updated to $lastBlockedTimestamp"
+                        )
+
+                        val intent = Intent(this@BlockerService, BlockedActivity::class.java).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            putExtra("BLOCK_TYPE", "keyword")
+                            putExtra("BLOCKED_KEYWORD", matchedKeyword.keyword)
+                        }
+                        Log.d("BlockerService", "Starting BlockedActivity for keyword: \"${matchedKeyword.keyword}\"")
+                        startActivity(intent)
+                    }
+                } else {
+                    Log.d("BlockerService", "No blocked keywords matched in the extracted text.")
+                }
+            } catch (e: Exception) {
+                Log.e("BlockerService", "Error in handleKeywordBlocking: ${e.message}", e)
+            } finally {
+                source.recycle()
+                Log.d("BlockerService", "Recycled AccessibilityNodeInfo source.")
+            }
+        }
+    }
+
+
+    private fun extractText(nodeInfo: AccessibilityNodeInfo): String? {
+        val stringBuilder = StringBuilder()
+        traverseNode(nodeInfo, stringBuilder)
+        return stringBuilder.toString()
+    }
+
+    private fun traverseNode(nodeInfo: AccessibilityNodeInfo?, stringBuilder: StringBuilder) {
+        if (nodeInfo == null) return
+
+        val text = nodeInfo.text
+        if (!text.isNullOrEmpty()) {
+            stringBuilder.append(text.toString()).append(" ")
+        }
+
+        for (i in 0 until nodeInfo.childCount) {
+            traverseNode(nodeInfo.getChild(i), stringBuilder)
         }
     }
 
