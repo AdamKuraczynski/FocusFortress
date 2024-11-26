@@ -104,8 +104,9 @@ fun BlockWebsiteScreen(
                         }
                     },
                     colors = TopAppBarDefaults.mediumTopAppBarColors(
-                        titleContentColor = Color.Black
+                        containerColor = Color.Black,
                     ),
+                    modifier = Modifier.background(Color.Transparent)
                 )
 
                 Row(

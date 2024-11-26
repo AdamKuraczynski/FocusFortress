@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
  * and provides methods to request permissions when needed.
  *
  * @author Adam Kuraczyński
- * @version 1.8
+ * @version 1.9
  *
  * @constructor Creates a [PermissionViewModel] with the given application context.
  *
@@ -43,8 +43,8 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
     private val localHasOverlayPermission = MutableStateFlow(checkOverlayPermission())
     val hasOverlayPermission: StateFlow<Boolean> = localHasOverlayPermission
 
-    private val localHasNotificationPermission = MutableStateFlow(checkNotificationListenerPermission())
-    val hasNotificationPermission: StateFlow<Boolean> = localHasNotificationPermission
+//    private val localHasNotificationPermission = MutableStateFlow(checkNotificationListenerPermission())
+//    val hasNotificationPermission: StateFlow<Boolean> = localHasNotificationPermission
 
     private val localHasAccessibilityPermission = MutableStateFlow(checkAccessibilityServicePermission())
     val hasAccessibilityPermission: StateFlow<Boolean> = localHasAccessibilityPermission
@@ -53,7 +53,7 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
         viewModelScope.launch {
             localHasUsageAccessPermission.value = checkUsageAccessPermission()
             localHasOverlayPermission.value = checkOverlayPermission()
-            localHasNotificationPermission.value = checkNotificationListenerPermission()
+            //localHasNotificationPermission.value = checkNotificationListenerPermission()
             localHasAccessibilityPermission.value = checkAccessibilityServicePermission()
         }
     }
@@ -72,13 +72,13 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
         return Settings.canDrawOverlays(context)
     }
 
-    private fun checkNotificationListenerPermission(): Boolean {
-        val enabledListeners = Settings.Secure.getString(
-            context.contentResolver,
-            "enabled_notification_listeners"
-        )
-        return enabledListeners != null && enabledListeners.contains(context.packageName)
-    }
+//    private fun checkNotificationListenerPermission(): Boolean {
+//        val enabledListeners = Settings.Secure.getString(
+//            context.contentResolver,
+//            "enabled_notification_listeners"
+//        )
+//        return enabledListeners != null && enabledListeners.contains(context.packageName)
+//    }
 
     private fun checkAccessibilityServicePermission(): Boolean {
         val enabledServices = Settings.Secure.getString(
@@ -101,11 +101,11 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
         context.startActivity(intent)
     }
 
-    fun requestNotificationAccess() {
-        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
-    }
+//    fun requestNotificationAccess() {
+//        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//        context.startActivity(intent)
+//    }
 
     fun requestPermissionAccess() {
         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)

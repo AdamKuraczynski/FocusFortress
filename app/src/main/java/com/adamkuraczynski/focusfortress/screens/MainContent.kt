@@ -84,8 +84,7 @@ fun MainContent(navController: NavController) {
                     }
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = Color.Transparent,
-                    titleContentColor = Color.White
+                    containerColor = Color.Black,
                 ),
                 modifier = Modifier.background(Color.Transparent),
                 windowInsets = WindowInsets.statusBars

@@ -121,8 +121,7 @@ fun ScreenTimeScreen(
                         }
                     },
                     colors = TopAppBarDefaults.mediumTopAppBarColors(
-                        containerColor = Color.Transparent,
-                        titleContentColor = Color.White
+                        containerColor = Color.Black,
                     ),
                     modifier = Modifier.background(Color.Transparent)
                 )

@@ -19,6 +19,15 @@ import kotlinx.coroutines.flow.firstOrNull
 class BlockerService : AccessibilityService() {
 
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private lateinit var notificationHelper: NotificationHelper
+
+    override fun onCreate() {
+        super.onCreate()
+        notificationHelper = NotificationHelper(this)
+        val notification = notificationHelper.buildForegroundNotification()
+        startForeground(notificationHelper.getNotificationId(), notification)
+    }
+
     private val supportedBrowsers = listOf(
         SupportedBrowserConfig("com.android.chrome", "com.android.chrome:id/url_bar"),
         SupportedBrowserConfig("org.mozilla.firefox", "org.mozilla.firefox:id/mozac_browser_toolbar_url_view"),

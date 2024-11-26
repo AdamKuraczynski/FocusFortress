@@ -7,10 +7,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -18,9 +23,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
@@ -46,6 +55,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  *
  **/
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionScreen(
     viewModel: PermissionViewModel,
@@ -53,10 +63,10 @@ fun PermissionScreen(
 ) {
     val hasUsageAccessPermission by viewModel.hasUsageAccessPermission.collectAsState()
     val hasOverlayPermission by viewModel.hasOverlayPermission.collectAsState()
-    val hasNotificationPermission by viewModel.hasNotificationPermission.collectAsState()
+    //val hasNotificationPermission by viewModel.hasNotificationPermission.collectAsState()
     val hasAccessibilityPermission by viewModel.hasAccessibilityPermission.collectAsState()
 
-    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission && hasNotificationPermission && hasAccessibilityPermission
+    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission  && hasAccessibilityPermission // && hasNotificationPermission
 
     // permissions update each time the screen is resumed
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -79,73 +89,99 @@ fun PermissionScreen(
     }
 
     if (!allPermissionsGranted) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.gate),
-                contentDescription = "Background image",
-                contentScale = ContentScale.Crop, //fit always
-                modifier = Modifier.fillMaxSize()
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text(
-                    text = "Required Permissions",
-                    style = MaterialTheme.typography.titleLarge.copy(
-                        fontFamily = MedievalFont,
-                        color = Golden,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 44.sp
+        Scaffold (
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                "Required Permissions",
+                                style = MaterialTheme.typography.titleLarge.copy(
+                                    color = Golden,
+                                    fontFamily = MedievalFont,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 44.sp,
+                                    shadow = Shadow(
+                                        color = Color.Black,
+                                        offset = Offset(2f, 2f),
+                                        blurRadius = 4f
+                                    ),
+                                    textAlign = TextAlign.Center
+                                )
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.mediumTopAppBarColors(
+                        containerColor = Color.Black,
                     ),
+                    modifier = Modifier.background(Color.Transparent)
+                )
+            }, content = { paddingValues ->
+
+                Box(
                     modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
+                        .fillMaxSize()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.gate),
+                        contentDescription = "Background image",
+                        contentScale = ContentScale.Crop, //fit always
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
-                PermissionItem(
-                    title = "Usage Access",
-                    textProvider = UsageAccessPermissionTextProvider(),
-                    granted = hasUsageAccessPermission,
-                    onClick = { viewModel.requestUsageAccessPermission() },
-                    modifier = Modifier.background(DarkBrown)
-                )
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                Spacer(modifier = Modifier.height(8.dp))
+                        PermissionItem(
+                            title = "Usage Access",
+                            textProvider = UsageAccessPermissionTextProvider(),
+                            granted = hasUsageAccessPermission,
+                            onClick = { viewModel.requestUsageAccessPermission() },
+                            modifier = Modifier.background(DarkBrown)
+                        )
 
-                PermissionItem(
-                    title = "Display Over Other Apps",
-                    textProvider = OverlayPermissionTextProvider(),
-                    granted = hasOverlayPermission,
-                    onClick = { viewModel.requestOverlayPermission() },
-                    modifier = Modifier.background(DarkBrown)
-                )
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                Spacer(modifier = Modifier.height(8.dp))
+                        PermissionItem(
+                            title = "Display Over Other Apps",
+                            textProvider = OverlayPermissionTextProvider(),
+                            granted = hasOverlayPermission,
+                            onClick = { viewModel.requestOverlayPermission() },
+                            modifier = Modifier.background(DarkBrown)
+                        )
 
-                PermissionItem(
-                    title = "Notification Access",
-                    textProvider = NotificationPermissionTextProvider(),
-                    granted = hasNotificationPermission,
-                    onClick = { viewModel.requestNotificationAccess() },
-                    modifier = Modifier.background(DarkBrown)
-                )
+//                Spacer(modifier = Modifier.height(8.dp))
+//                PermissionItem(
+//                    title = "Notification Access",
+//                    textProvider = NotificationPermissionTextProvider(),
+//                    granted = hasNotificationPermission,
+//                    onClick = { viewModel.requestNotificationAccess() },
+//                    modifier = Modifier.background(DarkBrown)
+//                )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
 
-                PermissionItem(
-                    title = "Accessibility Access",
-                    textProvider = AccessibilityPermissionTextProvider(),
-                    granted = hasAccessibilityPermission,
-                    onClick = { viewModel.requestPermissionAccess() },
-                    modifier = Modifier.background(DarkBrown)
-                )
+                        PermissionItem(
+                            title = "Accessibility Access",
+                            textProvider = AccessibilityPermissionTextProvider(),
+                            granted = hasAccessibilityPermission,
+                            onClick = { viewModel.requestPermissionAccess() },
+                            modifier = Modifier.background(DarkBrown)
+                        )
+                    }
+                }
             }
-        }
+        )
     }
 }
