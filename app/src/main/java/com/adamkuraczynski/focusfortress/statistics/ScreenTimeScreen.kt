@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.adamkuraczynski.focusfortress.R
+import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
+import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 
@@ -60,7 +62,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * The screen includes a styled top bar with navigation controls and period selection options.
  *
  * @author Adam Kuraczyński
- * @version 1.6
+ * @version 1.7
  *
  * @param navController The [NavController] used to navigate between app screens.
  * @param viewModel The [ScreenTimeViewModel] providing app usage data.
@@ -98,7 +100,7 @@ fun ScreenTimeScreen(
                             Text(
                                 "Screen Time",
                                 style = MaterialTheme.typography.titleLarge.copy(
-                                    color = Color(0xFFE0C097),
+                                    color = Golden,
                                     fontFamily = MedievalFont,
                                     fontSize = 40.sp,
                                     shadow = Shadow(
@@ -129,7 +131,7 @@ fun ScreenTimeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFF3B2F2F))
+                        .background(DarkBrown)
                         .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
@@ -141,7 +143,7 @@ fun ScreenTimeScreen(
                                 viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
                             },
                             colors = ButtonDefaults.textButtonColors(
-                                contentColor = if (selectedPeriod == period) Color(0xFFE0C097) else Color.White
+                                contentColor = if (selectedPeriod == period) Golden else Color.White
                             )
                         ) {
                             Text(
@@ -149,7 +151,7 @@ fun ScreenTimeScreen(
                                 style = MaterialTheme.typography.bodyLarge.copy(
                                     fontFamily = MedievalFont,
                                     fontSize = 18.sp,
-                                    color = if (selectedPeriod == period) Color(0xFFE0C097) else Color.White
+                                    color = if (selectedPeriod == period) Golden else Color.White
                                 )
                             )
                         }
@@ -159,7 +161,7 @@ fun ScreenTimeScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFF3B2F2F))
+                        .background(DarkBrown)
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {

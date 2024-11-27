@@ -49,6 +49,9 @@ import com.adamkuraczynski.focusfortress.R
 import com.adamkuraczynski.focusfortress.database.BlockedWebsite
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.TextFieldDefaults
+import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
+import com.adamkuraczynski.focusfortress.ui.theme.Golden
+import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 
@@ -81,7 +84,7 @@ fun BlockWebsiteScreen(
                             Text(
                                 "Block Website",
                                 style = MaterialTheme.typography.titleLarge.copy(
-                                    color = Color(0xFFE0C097),
+                                    color = Golden,
                                     fontFamily = MedievalFont,
                                     fontSize = 40.sp,
                                     shadow = Shadow(
@@ -112,9 +115,8 @@ fun BlockWebsiteScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFF3B2F2F), shape = RoundedCornerShape(8.dp))
+                        .background(DarkBrown, shape = RoundedCornerShape(8.dp))
                         .padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
                 ) {
 
                     TextField(
@@ -126,7 +128,7 @@ fun BlockWebsiteScreen(
                                 style = MaterialTheme.typography.bodyLarge.copy(
                                     fontFamily = MedievalFont,
                                     fontSize = 16.sp,
-                                    color = Color(0xFFE0C097)
+                                    color = Golden
                                 )
                             )
                         },
@@ -143,9 +145,9 @@ fun BlockWebsiteScreen(
                             color = Color.White
                         ),
                         colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xFF3B2F2F),
-                            unfocusedContainerColor = Color(0xFF3B2F2F),
-                            disabledContainerColor = Color(0xFF3B2F2F),
+                            focusedContainerColor = DarkBrown,
+                            unfocusedContainerColor = DarkBrown,
+                            disabledContainerColor = DarkBrown,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
                             disabledIndicatorColor = Color.Transparent,
@@ -160,7 +162,7 @@ fun BlockWebsiteScreen(
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF6D4C41),
+                            containerColor = LightBrown,
                             contentColor = Color.White
                         ),
                         shape = RoundedCornerShape(8.dp),
@@ -213,7 +215,7 @@ fun BlockWebsiteScreen(
                             Box(
                                 modifier = Modifier
                                     .padding(horizontal = 16.dp, vertical = 8.dp)
-                                    .background(Color(0xFF6D4C41), shape = RoundedCornerShape(8.dp))
+                                    .background(LightBrown, shape = RoundedCornerShape(8.dp))
                                     .padding(horizontal = 16.dp, vertical = 8.dp)
                             ){
                                 Text(
@@ -247,15 +249,13 @@ fun BlockWebsiteScreen(
     )
 }
 
-
-
 @Composable
 fun WebsiteItem(blockedWebsite: BlockedWebsite, onUnblock: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .background(Color(0xFF6D4C41), shape = RoundedCornerShape(8.dp))
+            .background(LightBrown, shape = RoundedCornerShape(8.dp))
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

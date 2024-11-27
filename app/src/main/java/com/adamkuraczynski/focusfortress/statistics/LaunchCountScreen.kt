@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.adamkuraczynski.focusfortress.R
+import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
+import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 /**
@@ -60,7 +62,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * The screen also includes a styled top bar with navigation controls and period selection options.
  *
  * @author Adam Kuraczyński
- * @version 1.5
+ * @version 1.6
  *
  * @param navController The [NavController] used to navigate between app screens.
  * @param viewModel The [LaunchCountViewModel] providing app launch data.
@@ -99,7 +101,7 @@ fun LaunchCountScreen(
                             Text(
                                 "Launch Count",
                                 style = MaterialTheme.typography.titleLarge.copy(
-                                    color = Color(0xFFE0C097),
+                                    color = Golden,
                                     fontFamily = MedievalFont,
                                     fontSize = 40.sp,
                                     shadow = Shadow(
@@ -130,7 +132,7 @@ fun LaunchCountScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFF3B2F2F))
+                        .background(DarkBrown)
                         .padding(vertical = 8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
@@ -142,7 +144,7 @@ fun LaunchCountScreen(
                                 viewModel.loadAppLaunchCounts(selectedPeriod, selectedSortOptionLaunchCount, minLaunchCount)
                             },
                             colors = ButtonDefaults.textButtonColors(
-                                contentColor = if (selectedPeriod == period) Color(0xFFE0C097) else Color.White
+                                contentColor = if (selectedPeriod == period) Golden else Color.White
                             )
                         ) {
                             Text(
@@ -150,7 +152,7 @@ fun LaunchCountScreen(
                                 style = MaterialTheme.typography.bodyLarge.copy(
                                     fontFamily = MedievalFont,
                                     fontSize = 18.sp,
-                                    color = if (selectedPeriod == period) Color(0xFFE0C097) else Color.White
+                                    color = if (selectedPeriod == period) Golden else Color.White
                                 )
                             )
                         }
@@ -160,7 +162,7 @@ fun LaunchCountScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFF3B2F2F))
+                        .background(DarkBrown)
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
@@ -301,9 +303,7 @@ fun LaunchCountScreen(
                         }
                     }
                 }
-
             }
         }
-
     )
 }

@@ -29,7 +29,7 @@ class UsageAccessPermissionTextProvider : PermissionTextProvider {
 
 class OverlayPermissionTextProvider : PermissionTextProvider {
     override fun getItemDescription(): String {
-        return "Display content over other apps."
+        return "Display over other apps."
     }
 
     override fun getDialogDescription(): String {
@@ -37,19 +37,19 @@ class OverlayPermissionTextProvider : PermissionTextProvider {
     }
 }
 
-class NotificationPermissionTextProvider : PermissionTextProvider {
-    override fun getItemDescription(): String {
-        return "Access your notifications."
-    }
-
-    override fun getDialogDescription(): String {
-        return "We need Notification Access to monitor and manage your notifications."
-    }
-}
+//class NotificationPermissionTextProvider : PermissionTextProvider {
+//    override fun getItemDescription(): String {
+//        return "Access your notifications."
+//    }
+//
+//    override fun getDialogDescription(): String {
+//        return "We need Notification Access to monitor and manage your notifications."
+//    }
+//}
 
 class AccessibilityPermissionTextProvider : PermissionTextProvider {
     override fun getItemDescription(): String {
-        return "Monitor your device's screen."
+        return "Monitor device's screen."
     }
 
     override fun getDialogDescription(): String {

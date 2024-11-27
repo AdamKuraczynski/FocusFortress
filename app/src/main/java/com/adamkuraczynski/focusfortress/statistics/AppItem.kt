@@ -25,8 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import com.adamkuraczynski.focusfortress.ui.theme.Golden
+import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
-
 
 @Composable
 fun AppItem(app: Any) {
@@ -34,7 +35,7 @@ fun AppItem(app: Any) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .background(Color(0xFF6D4C41), shape = RoundedCornerShape(8.dp))
+            .background(LightBrown, shape = RoundedCornerShape(8.dp))
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -89,18 +90,16 @@ fun AppItem(app: Any) {
             }
         }
 
-
         Text(
             text = detailText,
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontFamily = MedievalFont,
                 fontSize = 20.sp,
-                color = Color(0xFFE0C097)
+                color = Golden
             )
         )
     }
 }
-
 
 /**
  * Formats time in milliseconds to a string in the format "HH:mm:ss".

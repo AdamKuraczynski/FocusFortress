@@ -21,7 +21,7 @@ import com.adamkuraczynski.focusfortress.permissions.PermissionViewModel
 import com.adamkuraczynski.focusfortress.blocking.BlockKeywordScreen
 import com.adamkuraczynski.focusfortress.blocking.BlockWebsiteScreen
 import com.adamkuraczynski.focusfortress.screens.SelectStrictnessScreen
-import com.adamkuraczynski.focusfortress.screens.TakeABreakScreen
+import com.adamkuraczynski.focusfortress.screens.ScheduleScreen
 import com.adamkuraczynski.focusfortress.statistics.LaunchCountScreen
 import com.adamkuraczynski.focusfortress.statistics.ScreenTimeScreen
 import com.adamkuraczynski.focusfortress.ui.theme.FocusFortressTheme
@@ -45,7 +45,7 @@ import com.adamkuraczynski.focusfortress.blocking.BlockAppScreen
  * - Automatically navigates to the permissions screen if permissions are revoked.
  *
  * @author Adam Kuraczyński
- * @version 1.10
+ * @version 1.11
  *
  **/
 
@@ -124,11 +124,11 @@ fun MainApp() {
         composable("blockKeyword") {
             BlockKeywordScreen(navController = navController)
         }
-        composable("takeABreak") {
-            TakeABreakScreen(navController)
-        }
         composable("selectStrictness") {
             SelectStrictnessScreen(navController)
+        }
+        composable("schedules") {
+            ScheduleScreen(navController)
         }
     }
 }

@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -36,7 +39,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.adamkuraczynski.focusfortress.R
-import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
+import com.adamkuraczynski.focusfortress.ui.theme.Brown
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
@@ -48,7 +51,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * If not, it presents a list of permissions that the user needs to grant, along with options to request them.
  *
  * @author Adam Kuraczyński
- * @version 1.6
+ * @version 1.7
  *
  * @param viewModel The [PermissionViewModel] that handles the permission logic and state.
  * @param onPermissionsGranted A callback function invoked when all permissions have been granted.
@@ -95,7 +98,8 @@ fun PermissionScreen(
                     title = {
                         Box(
                             modifier = Modifier
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .wrapContentHeight(),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
@@ -104,7 +108,7 @@ fun PermissionScreen(
                                     color = Golden,
                                     fontFamily = MedievalFont,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 44.sp,
+                                    fontSize = 38.sp,
                                     shadow = Shadow(
                                         color = Color.Black,
                                         offset = Offset(2f, 2f),
@@ -118,7 +122,9 @@ fun PermissionScreen(
                     colors = TopAppBarDefaults.mediumTopAppBarColors(
                         containerColor = Color.Black,
                     ),
-                    modifier = Modifier.background(Color.Transparent)
+                    modifier = Modifier
+                        .background(Color.Transparent)
+                        .wrapContentHeight()
                 )
             }, content = { paddingValues ->
 
@@ -136,7 +142,8 @@ fun PermissionScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(paddingValues)
-                            .padding(16.dp),
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -148,17 +155,17 @@ fun PermissionScreen(
                             textProvider = UsageAccessPermissionTextProvider(),
                             granted = hasUsageAccessPermission,
                             onClick = { viewModel.requestUsageAccessPermission() },
-                            modifier = Modifier.background(DarkBrown)
+                            modifier = Modifier.background(Brown)
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
 
                         PermissionItem(
-                            title = "Display Over Other Apps",
+                            title = "Overlay Access",
                             textProvider = OverlayPermissionTextProvider(),
                             granted = hasOverlayPermission,
                             onClick = { viewModel.requestOverlayPermission() },
-                            modifier = Modifier.background(DarkBrown)
+                            modifier = Modifier.background(Brown)
                         )
 
 //                Spacer(modifier = Modifier.height(8.dp))
@@ -177,7 +184,7 @@ fun PermissionScreen(
                             textProvider = AccessibilityPermissionTextProvider(),
                             granted = hasAccessibilityPermission,
                             onClick = { viewModel.requestPermissionAccess() },
-                            modifier = Modifier.background(DarkBrown)
+                            modifier = Modifier.background(Brown)
                         )
                     }
                 }

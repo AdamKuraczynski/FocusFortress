@@ -34,7 +34,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
+import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
+import com.adamkuraczynski.focusfortress.ui.theme.LightGolden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 /**
@@ -47,7 +50,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * When the permission is granted, a checkmark icon is displayed.
  *
  * @author Adam Kuraczyński
- * @version 1.4
+ * @version 1.5
  *
  * @param title The title of the permission item.
  * @param textProvider The text provider for the permission item.
@@ -79,7 +82,7 @@ fun PermissionItem(
                 showDialog = false
                 onClick()
             },
-            modifier = modifier.background(Color(0xFF3B2F2F), shape = shape)
+            modifier = modifier.background(DarkBrown, shape = shape)
         )
     }
 
@@ -87,7 +90,7 @@ fun PermissionItem(
         modifier = Modifier
             .fillMaxWidth()
             .clip(shape)
-            .background(Color(0xFF3B2F2F))
+            .background(DarkBrown)
             .padding(4.dp)
     ) {
         Card(
@@ -100,24 +103,23 @@ fun PermissionItem(
                 .border(
                     width = 2.dp,
                     brush = Brush.linearGradient(
-                        colors = if (granted) listOf(Golden, Color(0xFFD4A373)) else listOf(Color(0xFF6D4C41), Color(0xFF3B2F2F))
+                        colors = if (granted) listOf(Golden, LightGolden) else listOf(LightBrown, DarkBrown)
                     ),
                     shape = shape
                 )
                 .clip(shape)
                 .background(
-                    color = if (granted) Golden.copy(alpha = 0.2f) else Color(0xFF6D4C41),
+                    color = if (granted) Golden.copy(alpha = 0.2f) else LightBrown,
                     shape = shape
                 )
                 .padding(8.dp),
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFF6D4C41)
+                containerColor = LightBrown
             )
         ) {
             Row(
                 modifier = Modifier.padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
-
             ) {
                 Column(
                     modifier = Modifier.weight(1f)
@@ -139,7 +141,7 @@ fun PermissionItem(
                         style = TextStyle(
                             fontFamily = MedievalFont,
                             fontSize = 14.sp,
-                            color = Color(0xFFB0A191)
+                            color = Golden
                         )
                     )
                 }

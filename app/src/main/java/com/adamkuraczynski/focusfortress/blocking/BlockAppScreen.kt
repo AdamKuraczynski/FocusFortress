@@ -62,6 +62,8 @@ import com.adamkuraczynski.focusfortress.R
 import com.adamkuraczynski.focusfortress.database.BlockedApp
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
+import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
+import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,7 +104,7 @@ fun BlockAppScreen(
                             Text(
                                 "Block App",
                                 style = MaterialTheme.typography.titleLarge.copy(
-                                    color = Color(0xFFE0C097),
+                                    color = Golden,
                                     fontFamily = MedievalFont,
                                     fontSize = 40.sp,
                                     shadow = Shadow(
@@ -133,7 +135,7 @@ fun BlockAppScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFF3B2F2F), shape = RoundedCornerShape(8.dp))
+                        .background(DarkBrown, shape = RoundedCornerShape(8.dp))
                         .padding(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -146,7 +148,7 @@ fun BlockAppScreen(
                                 style = MaterialTheme.typography.bodyLarge.copy(
                                     fontFamily = MedievalFont,
                                     fontSize = 16.sp,
-                                    color = Color(0xFFE0C097)
+                                    color = Golden
                                 )
                             )
                         },
@@ -163,9 +165,9 @@ fun BlockAppScreen(
                             color = Color.White
                         ),
                         colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xFF3B2F2F),
-                            unfocusedContainerColor = Color(0xFF3B2F2F),
-                            disabledContainerColor = Color(0xFF3B2F2F),
+                            focusedContainerColor = DarkBrown,
+                            unfocusedContainerColor = DarkBrown,
+                            disabledContainerColor = DarkBrown,
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
                             disabledIndicatorColor = Color.Transparent,
@@ -176,9 +178,9 @@ fun BlockAppScreen(
                         checked = showOnlyBlocked,
                         onCheckedChange = { showOnlyBlocked = it },
                         colors = CheckboxDefaults.colors(
-                            checkmarkColor = Color(0xFFE0C097),
-                            uncheckedColor = Color(0xFF6D4C41),
-                            checkedColor = Color(0xFF6D4C41)
+                            checkmarkColor = Golden,
+                            uncheckedColor = LightBrown,
+                            checkedColor = LightBrown,
                         )
                     )
                     Text(
@@ -234,7 +236,7 @@ fun BlockAppScreen(
                                 Box(
                                     modifier = Modifier
                                         .padding(horizontal = 16.dp, vertical = 8.dp)
-                                        .background(Color(0xFF6D4C41), shape = RoundedCornerShape(8.dp))
+                                        .background(LightBrown, shape = RoundedCornerShape(8.dp))
                                         .padding(horizontal = 16.dp, vertical = 8.dp)
                                 ) {
                                     Text(
@@ -291,7 +293,10 @@ fun AppItem(appInfo: AppInfo, isBlocked: Boolean, onToggleBlock: () -> Unit) {
             .fillMaxWidth()
             .clickable { onToggleBlock() }
             .padding(vertical = 8.dp)
-            .background(Color(0xFF6D4C41), shape = RoundedCornerShape(8.dp))
+            .background(
+                LightBrown,
+                shape = RoundedCornerShape(8.dp)
+            )
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

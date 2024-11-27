@@ -9,7 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
+import com.adamkuraczynski.focusfortress.ui.theme.DarkGray
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
+import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 /**
@@ -20,7 +23,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * about a required permission and prompt them to take action.
  *
  * @author Adam Kuraczyński
- * @version 1.2
+ * @version 1.3
  *
  * @param title The title of the dialog
  * @param description The description of the dialog
@@ -63,7 +66,7 @@ fun PermissionDialog(
         confirmButton = {
             TextButton(
                 onClick = onOkClick,
-                modifier = Modifier.background(Color(0xFF6D4C41))
+                modifier = Modifier.background(LightBrown)
             ) {
                 Text(
                     "OK",
@@ -78,7 +81,7 @@ fun PermissionDialog(
         dismissButton = {
             TextButton(
                 onClick = onDismiss,
-                modifier = Modifier.background(Color(0xFF6D4C41))
+                modifier = Modifier.background(LightBrown)
             ) {
                 Text(
                     "Cancel",
@@ -90,8 +93,7 @@ fun PermissionDialog(
                 )
             }
         },
-        containerColor = Color(0xFF2F2D38),
-        modifier = modifier.background(Color(0xFF3B2F2F))
-
+        containerColor = DarkGray,
+        modifier = modifier.background(DarkBrown)
     )
 }

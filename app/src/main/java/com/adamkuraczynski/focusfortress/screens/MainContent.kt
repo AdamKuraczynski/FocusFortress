@@ -1,6 +1,5 @@
 package com.adamkuraczynski.focusfortress.screens
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +17,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.adamkuraczynski.focusfortress.R
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
+import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 /**
@@ -51,7 +53,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * This composable function sets up the primary user interface of the app after all necessary permissions have been granted.
  *
  * @author Adam Kuraczyński
- * @version 1.2
+ * @version 1.3
  *
  */
 
@@ -71,7 +73,7 @@ fun MainContent(navController: NavController) {
                         Text(
                             "Focus Fortress",
                             style = MaterialTheme.typography.titleLarge.copy(
-                                color = Color(0xFFE0C097),
+                                color = Golden,
                                 fontFamily = MedievalFont,
                                 fontSize = 40.sp,
                                 shadow = Shadow(
@@ -106,13 +108,14 @@ fun MainContent(navController: NavController) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color(0x80000000))
+                        .background(Color.Black.copy(alpha = 0.5f))
                 )
 
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(8.dp),
+                        .padding(8.dp)
+                        .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
@@ -203,8 +206,8 @@ fun MainContent(navController: NavController) {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         StyledIconButton(
-                            text = "Take a Break",
-                            onClick = { navController.navigate("takeABreak") },
+                            text = "Pick from Schedules",
+                            onClick = { navController.navigate("schedules") },
                             iconRes = R.drawable.bed,
                             modifier = Modifier.weight(1f)
                         )
@@ -232,7 +235,7 @@ fun StyledIconButton(
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFF6D4C41),
+            containerColor = LightBrown,
             contentColor = Color.White
         ),
         shape = shape,
