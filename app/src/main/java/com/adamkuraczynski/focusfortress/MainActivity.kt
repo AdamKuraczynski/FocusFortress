@@ -3,15 +3,16 @@ package com.adamkuraczynski.focusfortress
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,12 +21,16 @@ import com.adamkuraczynski.focusfortress.permissions.PermissionScreen
 import com.adamkuraczynski.focusfortress.permissions.PermissionViewModel
 import com.adamkuraczynski.focusfortress.blocking.BlockKeywordScreen
 import com.adamkuraczynski.focusfortress.blocking.BlockWebsiteScreen
-import com.adamkuraczynski.focusfortress.screens.SelectStrictnessScreen
+import com.adamkuraczynski.focusfortress.strictness.SelectStrictnessScreen
 import com.adamkuraczynski.focusfortress.screens.ScheduleScreen
 import com.adamkuraczynski.focusfortress.statistics.LaunchCountScreen
 import com.adamkuraczynski.focusfortress.statistics.ScreenTimeScreen
 import com.adamkuraczynski.focusfortress.ui.theme.FocusFortressTheme
 import com.adamkuraczynski.focusfortress.blocking.BlockAppScreen
+import com.adamkuraczynski.focusfortress.strictness.PasscodeEntryScreen
+import com.adamkuraczynski.focusfortress.strictness.PasscodeSetupScreen
+import com.adamkuraczynski.focusfortress.strictness.PasscodeViewModel
+import com.adamkuraczynski.focusfortress.strictness.StrictnessViewModel
 
 /**
  * The main entry point of the FocusFortress application.
@@ -45,39 +50,51 @@ import com.adamkuraczynski.focusfortress.blocking.BlockAppScreen
  * - Automatically navigates to the permissions screen if permissions are revoked.
  *
  * @author Adam Kuraczyński
- * @version 1.11
+ * @version 1.12
  *
  **/
 
 class MainActivity : ComponentActivity() {
+    private val strictnessViewModel: StrictnessViewModel by viewModels()
+    private val passcodeViewModel: PasscodeViewModel by viewModels()
+    private val permissionViewModel: PermissionViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             FocusFortressTheme {
-                MainApp()
+                MainApp(
+                    strictnessViewModel = strictnessViewModel,
+                    passcodeViewModel = passcodeViewModel,
+                    permissionViewModel = permissionViewModel
+                )
             }
         }
     }
 }
 
 @Composable
-fun MainApp() {
+fun MainApp(
+    strictnessViewModel: StrictnessViewModel,
+    passcodeViewModel: PasscodeViewModel,
+    permissionViewModel: PermissionViewModel
+) {
     val navController = rememberNavController() //screen moving
-    val viewModel: PermissionViewModel = viewModel()
 
     // observers
-    val hasUsageAccessPermission by viewModel.hasUsageAccessPermission.collectAsState() //short for value
-    val hasOverlayPermission by viewModel.hasOverlayPermission.collectAsState()
     //val hasNotificationPermission by viewModel.hasNotificationPermission.collectAsState()
-    val hasAccessibilityPermission by viewModel.hasAccessibilityPermission.collectAsState()
-
+    val hasUsageAccessPermission by permissionViewModel.hasUsageAccessPermission.collectAsState() //short for value
+    val hasOverlayPermission by permissionViewModel.hasOverlayPermission.collectAsState()
+    val hasAccessibilityPermission by permissionViewModel.hasAccessibilityPermission.collectAsState()
     val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission && hasAccessibilityPermission //&& hasNotificationPermission
+
+    val strictnessLevel by strictnessViewModel.strictnessLevel.collectAsState()
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                viewModel.updatePermissionsStatus()
+                permissionViewModel.updatePermissionsStatus()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -86,7 +103,7 @@ fun MainApp() {
         }
     }
 
-    LaunchedEffect(allPermissionsGranted) { //watches allPermissionsGranted and acts if it changes
+    LaunchedEffect(allPermissionsGranted) { // watches allPermissionsGranted and acts if it changes
         if (!allPermissionsGranted && navController.currentDestination?.route != "permissions") {
             navController.navigate("permissions") {
                 popUpTo("main") { inclusive = true }
@@ -94,17 +111,37 @@ fun MainApp() {
         }
     }
 
-    NavHost(navController, startDestination = if (allPermissionsGranted) "main" else "permissions") {
+    val startDestination = remember {
+        if (!allPermissionsGranted) {
+            "permissions"
+        } else {
+            if (strictnessLevel == "Protected") {
+                "passcodeEntry"
+            } else {
+                "main"
+            }
+        }
+    }
+
+    NavHost(navController, startDestination = startDestination) {
         composable("permissions") {
             PermissionScreen(
-                viewModel = viewModel,
+                viewModel = permissionViewModel,
                 onPermissionsGranted = {
-                    navController.navigate("main") {
-                        // Remove permissions screen from back stack
-                        popUpTo("permissions") { inclusive = true }
+                    if (strictnessViewModel.strictnessLevel.value == "Protected") {
+                        navController.navigate("passcodeEntry") {
+                            popUpTo("permissions") { inclusive = true }
+                        }
+                    } else {
+                        navController.navigate("main") {
+                            popUpTo("permissions") { inclusive = true }
+                        }
                     }
                 }
             )
+        }
+        composable("passcodeEntry") {
+            PasscodeEntryScreen(navController, passcodeViewModel)
         }
         composable("main") {
             MainContent(navController)
@@ -125,7 +162,10 @@ fun MainApp() {
             BlockKeywordScreen(navController = navController)
         }
         composable("selectStrictness") {
-            SelectStrictnessScreen(navController)
+            SelectStrictnessScreen(navController, strictnessViewModel)
+        }
+        composable("passcodeSetup") {
+            PasscodeSetupScreen(navController, passcodeViewModel, strictnessViewModel)
         }
         composable("schedules") {
             ScheduleScreen(navController)

@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.adamkuraczynski.focusfortress.R
+import com.adamkuraczynski.focusfortress.strictness.OptionItem
 import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont

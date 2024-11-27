@@ -51,7 +51,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * If not, it presents a list of permissions that the user needs to grant, along with options to request them.
  *
  * @author Adam Kuraczyński
- * @version 1.7
+ * @version 1.8
  *
  * @param viewModel The [PermissionViewModel] that handles the permission logic and state.
  * @param onPermissionsGranted A callback function invoked when all permissions have been granted.
@@ -138,6 +138,13 @@ fun PermissionScreen(
                         contentScale = ContentScale.Crop, //fit always
                         modifier = Modifier.fillMaxSize()
                     )
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.5f))
+                    )
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()

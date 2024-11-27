@@ -1,7 +1,8 @@
-package com.adamkuraczynski.focusfortress.screens
+package com.adamkuraczynski.focusfortress.strictness
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,10 +51,14 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SelectStrictnessScreen(navController: NavController) {
+fun SelectStrictnessScreen(
+    navController: NavController,
+    strictnessViewModel: StrictnessViewModel
+) {
     val backgroundImage = painterResource(id = R.drawable.armory)
 
-    var selectedStrictness by remember { mutableStateOf<Int?>(null) }
+    val currentStrictness by strictnessViewModel.strictnessLevel.collectAsState()
+    var selectedStrictness by remember(currentStrictness) { mutableStateOf(currentStrictness) }
 
     Scaffold(
         topBar = {
@@ -141,13 +149,51 @@ fun SelectStrictnessScreen(navController: NavController) {
                         .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val index = 1
-                    OptionItem("Normal", isSelected = true, onSelect = {selectedStrictness = index} )
+
+                    OptionItem(
+                        description = "Normal",
+                        isSelected = selectedStrictness == "Normal",
+                        onSelect = { selectedStrictness = "Normal" }
+                    )
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    OptionItem("Protected", isSelected = false, onSelect = {selectedStrictness = index} )
+                    OptionItem(
+                        description = "Protected",
+                        isSelected = selectedStrictness == "Protected",
+                        onSelect = { selectedStrictness = "Protected" }
+                    )
 
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Button(
+                        onClick = {
+                            if (selectedStrictness == "Protected") {
+                                navController.navigate("passcodeSetup")
+                            } else {
+                                strictnessViewModel.setStrictnessLevel(selectedStrictness)
+                                navController.navigateUp()
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = DarkBrown
+                        ),
+                        shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .border(2.dp, Golden, RoundedCornerShape(16.dp))
+                    ) {
+                        Text(
+                            text = "Confirm",
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontSize = 25.sp,
+                                fontFamily = MedievalFont,
+                                color = Golden
+                            ),
+                            modifier = Modifier
+                                .padding(8.dp)
+                        )
+                    }
                 }
             }
         }

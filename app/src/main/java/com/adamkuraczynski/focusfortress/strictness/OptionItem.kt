@@ -1,4 +1,4 @@
-package com.adamkuraczynski.focusfortress.screens
+package com.adamkuraczynski.focusfortress.strictness
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
