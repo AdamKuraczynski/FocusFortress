@@ -18,13 +18,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -63,28 +63,22 @@ fun SelectStrictnessScreen(
     Scaffold(
         topBar = {
             Column {
-                TopAppBar(
+                CenterAlignedTopAppBar(
                     title = {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                "Select Strictness",
-                                style = MaterialTheme.typography.titleLarge.copy(
-                                    color = Golden,
-                                    fontFamily = MedievalFont,
-                                    fontSize = 40.sp,
-                                    shadow = Shadow(
-                                        color = Color.Black,
-                                        offset = Offset(2f, 2f),
-                                        blurRadius = 4f
-                                    ),
-                                    textAlign = TextAlign.Center
-                                )
+                        Text(
+                            "Select Strictness",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                color = Golden,
+                                fontFamily = MedievalFont,
+                                fontSize = 40.sp,
+                                shadow = Shadow(
+                                    color = Color.Black,
+                                    offset = Offset(2f, 2f),
+                                    blurRadius = 4f
+                                ),
+                                textAlign = TextAlign.Center
                             )
-                        }
+                        )
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {

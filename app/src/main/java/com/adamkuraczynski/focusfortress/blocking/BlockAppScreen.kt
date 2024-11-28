@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -32,7 +33,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -94,28 +94,22 @@ fun BlockAppScreen(
     Scaffold(
         topBar = {
             Column {
-                TopAppBar(
+                CenterAlignedTopAppBar(
                     title = {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                "Block App",
-                                style = MaterialTheme.typography.titleLarge.copy(
-                                    color = Golden,
-                                    fontFamily = MedievalFont,
-                                    fontSize = 40.sp,
-                                    shadow = Shadow(
-                                        color = Color.Black,
-                                        offset = Offset(2f, 2f),
-                                        blurRadius = 4f
-                                    ),
-                                    textAlign = TextAlign.Center
-                                )
+                        Text(
+                            "Block App",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                color = Golden,
+                                fontFamily = MedievalFont,
+                                fontSize = 40.sp,
+                                shadow = Shadow(
+                                    color = Color.Black,
+                                    offset = Offset(2f, 2f),
+                                    blurRadius = 4f
+                                ),
+                                textAlign = TextAlign.Center
                             )
-                        }
+                        )
                     },
                     navigationIcon = {
                         IconButton(onClick = { navController.navigateUp() }) {
