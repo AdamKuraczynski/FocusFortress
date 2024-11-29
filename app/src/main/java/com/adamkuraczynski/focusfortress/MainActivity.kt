@@ -16,17 +16,17 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.adamkuraczynski.focusfortress.screens.MainContent
 import com.adamkuraczynski.focusfortress.permissions.PermissionScreen
 import com.adamkuraczynski.focusfortress.permissions.PermissionViewModel
 import com.adamkuraczynski.focusfortress.blocking.BlockKeywordScreen
 import com.adamkuraczynski.focusfortress.blocking.BlockWebsiteScreen
 import com.adamkuraczynski.focusfortress.strictness.SelectStrictnessScreen
-import com.adamkuraczynski.focusfortress.screens.ScheduleScreen
+import com.adamkuraczynski.focusfortress.schedules.ScheduleScreen
 import com.adamkuraczynski.focusfortress.statistics.LaunchCountScreen
 import com.adamkuraczynski.focusfortress.statistics.ScreenTimeScreen
 import com.adamkuraczynski.focusfortress.ui.theme.FocusFortressTheme
 import com.adamkuraczynski.focusfortress.blocking.BlockAppScreen
+import com.adamkuraczynski.focusfortress.schedules.ScheduleViewModel
 import com.adamkuraczynski.focusfortress.strictness.PasscodeEntryScreen
 import com.adamkuraczynski.focusfortress.strictness.PasscodeSetupScreen
 import com.adamkuraczynski.focusfortress.strictness.PasscodeViewModel
@@ -50,7 +50,7 @@ import com.adamkuraczynski.focusfortress.strictness.StrictnessViewModel
  * - Automatically navigates to the permissions screen if permissions are revoked.
  *
  * @author Adam Kuraczyński
- * @version 1.12
+ * @version 1.13
  *
  **/
 
@@ -58,6 +58,7 @@ class MainActivity : ComponentActivity() {
     private val strictnessViewModel: StrictnessViewModel by viewModels()
     private val passcodeViewModel: PasscodeViewModel by viewModels()
     private val permissionViewModel: PermissionViewModel by viewModels()
+    private val scheduleViewModel: ScheduleViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +67,8 @@ class MainActivity : ComponentActivity() {
                 MainApp(
                     strictnessViewModel = strictnessViewModel,
                     passcodeViewModel = passcodeViewModel,
-                    permissionViewModel = permissionViewModel
+                    permissionViewModel = permissionViewModel,
+                    scheduleViewModel = scheduleViewModel
                 )
             }
         }
@@ -77,7 +79,8 @@ class MainActivity : ComponentActivity() {
 fun MainApp(
     strictnessViewModel: StrictnessViewModel,
     passcodeViewModel: PasscodeViewModel,
-    permissionViewModel: PermissionViewModel
+    permissionViewModel: PermissionViewModel,
+    scheduleViewModel: ScheduleViewModel
 ) {
     val navController = rememberNavController() //screen moving
 
@@ -168,7 +171,7 @@ fun MainApp(
             PasscodeSetupScreen(navController, passcodeViewModel, strictnessViewModel)
         }
         composable("schedules") {
-            ScheduleScreen(navController)
+            ScheduleScreen(navController, scheduleViewModel)
         }
     }
 }

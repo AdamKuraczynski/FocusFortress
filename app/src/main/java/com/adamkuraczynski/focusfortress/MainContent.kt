@@ -1,4 +1,4 @@
-package com.adamkuraczynski.focusfortress.screens
+package com.adamkuraczynski.focusfortress
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,7 +42,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.adamkuraczynski.focusfortress.R
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
@@ -53,7 +52,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * This composable function sets up the primary user interface of the app after all necessary permissions have been granted.
  *
  * @author Adam Kuraczyński
- * @version 1.3
+ * @version 1.4
  *
  */
 

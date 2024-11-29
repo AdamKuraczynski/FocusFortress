@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 import kotlinx.coroutines.flow.firstOrNull
+import java.util.Calendar
 
 class BlockerService : AccessibilityService() {
 
@@ -50,6 +51,31 @@ class BlockerService : AccessibilityService() {
         super.onDestroy()
     }
 
+    private suspend fun isBlockingActive(): Boolean {
+        val activeSchedule = FocusFortressApp.database.scheduleDao().getActiveSchedule().firstOrNull()
+            ?: return false
+
+        val calendar = Calendar.getInstance()
+        val currentDay = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())?.uppercase()
+        val currentTime = String.format(Locale.US,"%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
+
+        val daysOfWeek = activeSchedule.daysOfWeek.split(",")
+        val startTime = activeSchedule.startTime
+        val endTime = activeSchedule.endTime
+
+        val isDayMatching = currentDay in daysOfWeek
+
+        val isTimeMatching = if (startTime <= endTime) {
+            // midnight not crossing
+            currentTime in startTime..endTime
+        } else {
+            // midnight crossing
+            currentTime >= startTime || currentTime <= endTime
+        }
+
+        return isDayMatching && isTimeMatching
+    }
+
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null) return
 
@@ -68,6 +94,8 @@ class BlockerService : AccessibilityService() {
                     handleAppBlocking(event)
                 }
             }
+            else -> { // we do not handle other event types
+            }
         }
     }
 
@@ -79,6 +107,7 @@ class BlockerService : AccessibilityService() {
 
         // coroutine to check if the app is blocked, changed to scope from runBlocking due to main thread blocking
         serviceScope.launch {
+            if (!isBlockingActive()) return@launch // must be run in coroutine to not block main thread!!
             // database query
             val isBlocked = FocusFortressApp.database.blockedAppDao().isAppBlocked(packageName)
             if (isBlocked) {
@@ -100,7 +129,6 @@ class BlockerService : AccessibilityService() {
     private fun handleWebsiteBlocking(event: AccessibilityEvent, browserConfig: SupportedBrowserConfig) {
         val source = event.source ?: return
         val url = captureUrl(source, browserConfig)
-        source.recycle()
 
         if (url != null) {
             val domain = extractDomain(url)?.lowercase(Locale.getDefault())?.removePrefix("www.")
@@ -110,6 +138,7 @@ class BlockerService : AccessibilityService() {
                 if (domain == lastBlockedDomain && System.currentTimeMillis() - lastBlockedTimestamp < 500) return
 
                 serviceScope.launch {
+                    if (!isBlockingActive()) return@launch
                     val isBlocked = FocusFortressApp.database.blockedWebsiteDao().isWebsiteBlocked(domain)
                     if (isBlocked) {
                         withContext(Dispatchers.Main) {
@@ -151,7 +180,6 @@ class BlockerService : AccessibilityService() {
 
         val source = event.source ?: return
         val url = captureUrl(source, browserConfig)
-        source.recycle()
 
         if (url != null) {
             val searchText = extractSearchTextFromUrl(url)
@@ -190,6 +218,7 @@ class BlockerService : AccessibilityService() {
         if (searchText.isEmpty()) return
 
         serviceScope.launch {
+            if (!isBlockingActive()) return@launch
             val blockedKeywords = FocusFortressApp.database.blockedKeywordDao().getBlockedKeywords().firstOrNull() ?: return@launch
             val normalizedQuery = searchText.lowercase(Locale.getDefault())
 
@@ -225,9 +254,6 @@ class BlockerService : AccessibilityService() {
                 return null
             }
             val url = nodes[0].text?.toString()
-            for (node in nodes) {
-                node.recycle()
-            }
             return url
         } catch (e: Exception) {
             return null
