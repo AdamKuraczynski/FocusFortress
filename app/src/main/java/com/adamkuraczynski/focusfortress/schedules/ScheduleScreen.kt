@@ -48,7 +48,22 @@ import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
-
+/**
+ * Composable function that displays the schedule selection screen.
+ *
+ * Users can select from predefined schedules to control when the app's features are active.
+ * Only one schedule can be active at a time.
+ *
+ * @param navController The [NavController] for navigating between screens.
+ * @param scheduleViewModel The [ScheduleViewModel] managing schedules.
+ *
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.4
+ *
+ * @see androidx.navigation.NavController
+ * @see OptionItem
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleScreen(
@@ -102,11 +117,11 @@ fun ScheduleScreen(
         content = { paddingValues ->
             Box(
                 modifier = Modifier
-                    .fillMaxSize())
-            {
+                    .fillMaxSize()
+            ) {
                 Image(
                     painter = backgroundImage,
-                    contentDescription = null,
+                    contentDescription = "Background image of a room",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )

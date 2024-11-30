@@ -1,4 +1,3 @@
-
 package com.adamkuraczynski.focusfortress.permissions
 
 import android.annotation.SuppressLint
@@ -24,14 +23,15 @@ import kotlinx.coroutines.launch
  * The ViewModel exposes [StateFlow] properties to observe the current status of permissions
  * and provides methods to request permissions when needed.
  *
- * @author Adam Kuraczyński
- * @version 1.9
- *
  * @constructor Creates a [PermissionViewModel] with the given application context.
  *
  * @param application The application context used to access system services.
+ *
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.4
+ *
  */
-
 class PermissionViewModel(application: Application) : AndroidViewModel(application) {
 
     @SuppressLint("StaticFieldLeak")
@@ -43,21 +43,27 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
     private val localHasOverlayPermission = MutableStateFlow(checkOverlayPermission())
     val hasOverlayPermission: StateFlow<Boolean> = localHasOverlayPermission
 
-//    private val localHasNotificationPermission = MutableStateFlow(checkNotificationListenerPermission())
-//    val hasNotificationPermission: StateFlow<Boolean> = localHasNotificationPermission
-
     private val localHasAccessibilityPermission = MutableStateFlow(checkAccessibilityServicePermission())
     val hasAccessibilityPermission: StateFlow<Boolean> = localHasAccessibilityPermission
 
+    /**
+     * Updates the status of all permissions by rechecking their current state.
+     *
+     * This method should be called whenever the app resumes to ensure the permission status is up-to-date.
+     */
     fun updatePermissionsStatus() {
         viewModelScope.launch {
             localHasUsageAccessPermission.value = checkUsageAccessPermission()
             localHasOverlayPermission.value = checkOverlayPermission()
-            //localHasNotificationPermission.value = checkNotificationListenerPermission()
             localHasAccessibilityPermission.value = checkAccessibilityServicePermission()
         }
     }
 
+    /**
+     * Checks if the app has Usage Access permission.
+     *
+     * @return `true` if the permission is granted; `false` otherwise.
+     */
     private fun checkUsageAccessPermission(): Boolean {
         val appOpsManager = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
         val mode = appOpsManager.unsafeCheckOpNoThrow(
@@ -68,18 +74,20 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
         return mode == AppOpsManager.MODE_ALLOWED
     }
 
+    /**
+     * Checks if the app has Overlay permission.
+     *
+     * @return `true` if the permission is granted; `false` otherwise.
+     */
     private fun checkOverlayPermission(): Boolean {
         return Settings.canDrawOverlays(context)
     }
 
-//    private fun checkNotificationListenerPermission(): Boolean {
-//        val enabledListeners = Settings.Secure.getString(
-//            context.contentResolver,
-//            "enabled_notification_listeners"
-//        )
-//        return enabledListeners != null && enabledListeners.contains(context.packageName)
-//    }
-
+    /**
+     * Checks if the app has Accessibility Service permission.
+     *
+     * @return `true` if the permission is granted; `false` otherwise.
+     */
     private fun checkAccessibilityServicePermission(): Boolean {
         val enabledServices = Settings.Secure.getString(
             context.contentResolver,
@@ -88,12 +96,18 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
         return enabledServices != null && enabledServices.contains(context.packageName)
     }
 
+    /**
+     * Requests the Usage Access permission by launching the appropriate settings screen.
+     */
     fun requestUsageAccessPermission() {
         val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
 
+    /**
+     * Requests the Overlay permission by launching the appropriate settings screen.
+     */
     fun requestOverlayPermission() {
         val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
         intent.data = Uri.parse("package:${context.packageName}")
@@ -101,12 +115,9 @@ class PermissionViewModel(application: Application) : AndroidViewModel(applicati
         context.startActivity(intent)
     }
 
-//    fun requestNotificationAccess() {
-//        val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//        context.startActivity(intent)
-//    }
-
+    /**
+     * Requests the Accessibility Service permission by launching the appropriate settings screen.
+     */
     fun requestPermissionAccess() {
         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

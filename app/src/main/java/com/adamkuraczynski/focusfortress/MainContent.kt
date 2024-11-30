@@ -50,9 +50,11 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * Displays the main menu of the Focus Fortress application with medieval styling.
  *
  * This composable function sets up the primary user interface of the app after all necessary permissions have been granted.
+ * It includes navigation to various features like usage statistics, blocking options, and other settings.
  *
- * @author Adam Kuraczyński
- * @version 1.4
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.9
  *
  */
 
@@ -75,7 +77,8 @@ fun MainContent(navController: NavController) {
                                 color = Color.Black,
                                 offset = Offset(2f, 2f),
                                 blurRadius = 4f
-                            )
+                            ),
+                            textAlign = TextAlign.Center
                         )
                     )
                 },
@@ -94,7 +97,7 @@ fun MainContent(navController: NavController) {
             ) {
                 Image(
                     painter = backgroundImage,
-                    contentDescription = null,
+                    contentDescription = "Background image of a medieval courtyard",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -132,12 +135,14 @@ fun MainContent(navController: NavController) {
                             text = "Screen Time Per App",
                             onClick = { navController.navigate("screenTime") },
                             iconRes = R.drawable.horse,
+                            contentDescription = "Decorative Icon",
                             modifier = Modifier.weight(1f)
                         )
                         StyledIconButton(
                             text = "Launch Count Per App",
                             onClick = { navController.navigate("launchCount") },
                             iconRes = R.drawable.hay,
+                            contentDescription = "Decorative Icon",
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -160,12 +165,14 @@ fun MainContent(navController: NavController) {
                             text = "Block App",
                             onClick = { navController.navigate("blockApp") },
                             iconRes = R.drawable.campfire,
+                            contentDescription = "Decorative Icon",
                             modifier = Modifier.weight(1f)
                         )
                         StyledIconButton(
                             text = "Block Website",
                             onClick = { navController.navigate("blockWebsite") },
                             iconRes = R.drawable.food,
+                            contentDescription = "Decorative Icon",
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -179,6 +186,7 @@ fun MainContent(navController: NavController) {
                             text = "Block Keyword",
                             onClick = { navController.navigate("blockKeyword") },
                             iconRes = R.drawable.water_bucket,
+                            contentDescription = "Decorative Icon",
                             modifier = Modifier
                                 .weight(2f)
                         )
@@ -203,12 +211,14 @@ fun MainContent(navController: NavController) {
                             text = "Pick from Schedules",
                             onClick = { navController.navigate("schedules") },
                             iconRes = R.drawable.bed,
+                            contentDescription = "Decorative Icon",
                             modifier = Modifier.weight(1f)
                         )
                         StyledIconButton(
                             text = "Select Strictness Level",
                             onClick = { navController.navigate("selectStrictness") },
                             iconRes = R.drawable.armor,
+                            contentDescription = "Decorative Icon",
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -218,11 +228,23 @@ fun MainContent(navController: NavController) {
     )
 }
 
+
+/**
+ * A styled button with an icon and text used in the main content.
+ *
+ * @param text The text to display on the button.
+ * @param onClick The action to perform when the button is clicked.
+ * @param iconRes The resource ID of the icon to display.
+ * @param contentDescription A description of the icon for accessibility.
+ * @param modifier The modifier to be applied to the button.
+ * @param shape The shape of the button.
+ */
 @Composable
 fun StyledIconButton(
     text: String,
     onClick: () -> Unit,
     iconRes: Int,
+    contentDescription: String,
     modifier: Modifier = Modifier,
     shape: RoundedCornerShape = RoundedCornerShape(16.dp)
 ) {
@@ -243,7 +265,7 @@ fun StyledIconButton(
         ) {
             Image(
                 painter = painterResource(id = iconRes),
-                contentDescription = null,
+                contentDescription = contentDescription,
                 modifier = Modifier
                     .size(50.dp)
                     .clip(RoundedCornerShape(16.dp))

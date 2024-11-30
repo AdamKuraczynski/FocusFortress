@@ -57,18 +57,18 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 /**
  * Displays the screen time usage for apps over different time periods.
  *
- * This composable function retrieves app usage data from the `ScreenTimeViewModel` and
+ * This composable function retrieves app usage data from the [ScreenTimeViewModel] and
  * presents it in a scrollable list, allowing users to toggle between different time periods.
  * The screen includes a styled top bar with navigation controls and period selection options.
- *
- * @author Adam Kuraczyński
- * @version 1.7
  *
  * @param navController The [NavController] used to navigate between app screens.
  * @param viewModel The [ScreenTimeViewModel] providing app usage data.
  *
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.10
+ *
  */
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenTimeScreen(
@@ -135,7 +135,11 @@ fun ScreenTimeScreen(
                         TextButton(
                             onClick = {
                                 selectedPeriod = period
-                                viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
+                                viewModel.loadAppUsageTimes(
+                                    selectedPeriod,
+                                    selectedSortOption,
+                                    minUsageTimeMillis
+                                )
                             },
                             colors = ButtonDefaults.textButtonColors(
                                 contentColor = if (selectedPeriod == period) Golden else Color.White
@@ -174,8 +178,8 @@ fun ScreenTimeScreen(
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = when (selectedSortOption) {
-                                    SortOptionScreenTime.UsageTimeDescending -> "Launch count ↓"
-                                    SortOptionScreenTime.UsageTimeAscending -> "Launch count ↑"
+                                    SortOptionScreenTime.UsageTimeDescending -> "Usage Time ↓"
+                                    SortOptionScreenTime.UsageTimeAscending -> "Usage Time ↑"
                                     SortOptionScreenTime.AppNameAscending -> "App Name A→Z"
                                     SortOptionScreenTime.AppNameDescending -> "App Name Z→A"
                                 },
@@ -192,22 +196,38 @@ fun ScreenTimeScreen(
                         ) {
                             MenuItem("Usage Time ↓") {
                                 selectedSortOption = SortOptionScreenTime.UsageTimeDescending
-                                viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
+                                viewModel.loadAppUsageTimes(
+                                    selectedPeriod,
+                                    selectedSortOption,
+                                    minUsageTimeMillis
+                                )
                                 isSortMenuExpanded = false
                             }
                             MenuItem("Usage Time ↑") {
                                 selectedSortOption = SortOptionScreenTime.UsageTimeAscending
-                                viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
+                                viewModel.loadAppUsageTimes(
+                                    selectedPeriod,
+                                    selectedSortOption,
+                                    minUsageTimeMillis
+                                )
                                 isSortMenuExpanded = false
                             }
                             MenuItem("App Name A→Z") {
                                 selectedSortOption = SortOptionScreenTime.AppNameAscending
-                                viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
+                                viewModel.loadAppUsageTimes(
+                                    selectedPeriod,
+                                    selectedSortOption,
+                                    minUsageTimeMillis
+                                )
                                 isSortMenuExpanded = false
                             }
                             MenuItem("App Name Z→A") {
                                 selectedSortOption = SortOptionScreenTime.AppNameDescending
-                                viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
+                                viewModel.loadAppUsageTimes(
+                                    selectedPeriod,
+                                    selectedSortOption,
+                                    minUsageTimeMillis
+                                )
                                 isSortMenuExpanded = false
                             }
                         }
@@ -250,7 +270,11 @@ fun ScreenTimeScreen(
                                     }
                                 ) {
                                     minUsageTimeMillis = time
-                                    viewModel.loadAppUsageTimes(selectedPeriod, selectedSortOption, minUsageTimeMillis)
+                                    viewModel.loadAppUsageTimes(
+                                        selectedPeriod,
+                                        selectedSortOption,
+                                        minUsageTimeMillis
+                                    )
                                     isFilterMenuExpanded = false
                                 }
                             }
@@ -267,7 +291,7 @@ fun ScreenTimeScreen(
             ) {
                 Image(
                     painter = backgroundImage,
-                    contentDescription = null,
+                    contentDescription = "Background image of stables",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )

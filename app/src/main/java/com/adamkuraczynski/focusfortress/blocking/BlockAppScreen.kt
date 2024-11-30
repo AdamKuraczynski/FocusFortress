@@ -65,6 +65,23 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
 import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 
+/**
+ * Composable function that displays the screen for blocking apps.
+ *
+ * Users can search for installed apps and select apps to block or unblock.
+ * The blocked apps are stored in the database, and the blocking functionality
+ * is managed by the service.
+ *
+ * @param navController The [NavController] for navigating between screens.
+ * @param viewModel The [BlockAppViewModel] managing the app blocking logic.
+ *
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.7
+ *
+ * @see androidx.navigation.NavController
+ * @see androidx.lifecycle.viewmodel.compose.viewModel
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BlockAppScreen(
@@ -195,7 +212,7 @@ fun BlockAppScreen(
             ) {
                 Image(
                     painter = backgroundImage,
-                    contentDescription = null,
+                    contentDescription = "Background image of a fireplace",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -205,7 +222,6 @@ fun BlockAppScreen(
                         .fillMaxSize()
                         .background(Color.Black.copy(alpha = 0.5f))
                 )
-
 
                 if (installedApps.isEmpty()) {
                     Box(
@@ -279,7 +295,19 @@ fun BlockAppScreen(
     )
 }
 
-
+/**
+ * Composable function representing a single app item in the list.
+ *
+ * Displays the app icon, name, and a lock icon indicating whether the app is blocked.
+ * Users can tap on the item to toggle the blocking state.
+ *
+ * @param appInfo The [AppInfo] containing app details.
+ * @param isBlocked Indicates whether the app is currently blocked.
+ * @param onToggleBlock Callback function when the app's block state is toggled.
+ *
+ * @see AppInfo
+ *
+ */
 @Composable
 fun AppItem(appInfo: AppInfo, isBlocked: Boolean, onToggleBlock: () -> Unit) {
     Row(

@@ -14,13 +14,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-data class AppInfo(
-    val packageName: String,
-    val appName: String,
-    val appIcon: Drawable
-)
-
-
+/**
+ * ViewModel responsible for managing the list of installed apps and blocked apps.
+ *
+ * Fetches the list of installed apps and provides functionality to block or unblock apps.
+ *
+ * @param application The [Application] context used to access system services.
+ *
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.4
+ *
+ * @see androidx.lifecycle.AndroidViewModel
+ * @see AppInfo
+ */
 class BlockAppViewModel(application: Application) : AndroidViewModel(application) {
 
     private val packageManager = application.packageManager
@@ -36,6 +43,9 @@ class BlockAppViewModel(application: Application) : AndroidViewModel(application
         fetchInstalledApps()
     }
 
+    /**
+     * Fetches the list of installed apps that can be launched.
+     */
     private fun fetchInstalledApps() {
         viewModelScope.launch(Dispatchers.IO) {
             val packages = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
@@ -49,11 +59,17 @@ class BlockAppViewModel(application: Application) : AndroidViewModel(application
                     appName = appName,
                     appIcon = appIcon
                 )
-            }.sortedByDescending { it.appName } // z -> a
+            }.sortedBy { it.appName } // a -> z
             _installedApps.value = apps
         }
     }
 
+    /**
+     * Blocks an app by adding it to the blocked apps database.
+     *
+     * @param packageName The package name of the app to block.
+     * @param appName The display name of the app.
+     */
     fun blockApp(packageName: String, appName: String) {
         viewModelScope.launch {
             val blockedApp = BlockedApp(packageName, appName)
@@ -61,6 +77,11 @@ class BlockAppViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    /**
+     * Unblocks an app by removing it from the blocked apps database.
+     *
+     * @param blockedApp The [BlockedApp] to unblock.
+     */
     fun unblockApp(blockedApp: BlockedApp) {
         viewModelScope.launch {
             blockedAppDao.deleteBlockedApp(blockedApp)
@@ -68,3 +89,16 @@ class BlockAppViewModel(application: Application) : AndroidViewModel(application
     }
 
 }
+
+/**
+ * Data class representing information about an installed app.
+ *
+ * @property packageName The package name of the app.
+ * @property appName The display name of the app.
+ * @property appIcon The icon drawable of the app.
+ */
+data class AppInfo(
+    val packageName: String,
+    val appName: String,
+    val appIcon: Drawable
+)

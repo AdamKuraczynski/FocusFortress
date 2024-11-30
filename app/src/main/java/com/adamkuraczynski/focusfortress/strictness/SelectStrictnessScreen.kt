@@ -50,6 +50,22 @@ import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 
+/**
+ * Composable function that displays the strictness selection screen.
+ *
+ * Users can select between different strictness levels, such as "Normal" or "Protected".
+ * If "Protected" is selected, the user is navigated to the passcode setup screen.
+ *
+ * @param navController The [NavController] for navigating between screens.
+ * @param strictnessViewModel The [StrictnessViewModel] managing strictness levels.
+ *
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.7
+ *
+ * @see androidx.navigation.NavController
+ * @see OptionItem
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectStrictnessScreen(
@@ -121,11 +137,11 @@ fun SelectStrictnessScreen(
         content = { paddingValues ->
             Box(
                 modifier = Modifier
-                    .fillMaxSize())
-            {
+                    .fillMaxSize()
+            ) {
                 Image(
                     painter = backgroundImage,
-                    contentDescription = null,
+                    contentDescription = "Background image of an armory",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )

@@ -57,18 +57,18 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * Displays the app launch count screen, where users can view app launch counts
  * over different time periods ("Day", "3 Days", "Week").
  *
- * This composable function retrieves app launch data from the `LaunchCountViewModel` and
+ * This composable function retrieves app launch data from the [LaunchCountViewModel] and
  * presents it in a scrollable list, allowing users to toggle between different time periods.
  * The screen also includes a styled top bar with navigation controls and period selection options.
- *
- * @author Adam Kuraczyński
- * @version 1.6
  *
  * @param navController The [NavController] used to navigate between app screens.
  * @param viewModel The [LaunchCountViewModel] providing app launch data.
  *
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.10
+ *
  */
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LaunchCountScreen(
@@ -136,7 +136,11 @@ fun LaunchCountScreen(
                         TextButton(
                             onClick = {
                                 selectedPeriod = period
-                                viewModel.loadAppLaunchCounts(selectedPeriod, selectedSortOptionLaunchCount, minLaunchCount)
+                                viewModel.loadAppLaunchCounts(
+                                    selectedPeriod,
+                                    selectedSortOptionLaunchCount,
+                                    minLaunchCount
+                                )
                             },
                             colors = ButtonDefaults.textButtonColors(
                                 contentColor = if (selectedPeriod == period) Golden else Color.White
@@ -162,7 +166,7 @@ fun LaunchCountScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     // sorting
-                    Box{
+                    Box {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.clickable { isSortMenuExpanded = !isSortMenuExpanded }
@@ -193,29 +197,45 @@ fun LaunchCountScreen(
                         ) {
                             MenuItem("Launch Count ↓") {
                                 selectedSortOptionLaunchCount = SortOptionLaunchCount.LaunchCountDescending
-                                viewModel.loadAppLaunchCounts(selectedPeriod, selectedSortOptionLaunchCount, minLaunchCount)
+                                viewModel.loadAppLaunchCounts(
+                                    selectedPeriod,
+                                    selectedSortOptionLaunchCount,
+                                    minLaunchCount
+                                )
                                 isSortMenuExpanded = false
                             }
                             MenuItem("Launch Count ↑") {
                                 selectedSortOptionLaunchCount = SortOptionLaunchCount.LaunchCountAscending
-                                viewModel.loadAppLaunchCounts(selectedPeriod, selectedSortOptionLaunchCount, minLaunchCount)
+                                viewModel.loadAppLaunchCounts(
+                                    selectedPeriod,
+                                    selectedSortOptionLaunchCount,
+                                    minLaunchCount
+                                )
                                 isSortMenuExpanded = false
                             }
                             MenuItem("App Name A→Z") {
                                 selectedSortOptionLaunchCount = SortOptionLaunchCount.AppNameAscending
-                                viewModel.loadAppLaunchCounts(selectedPeriod, selectedSortOptionLaunchCount, minLaunchCount)
+                                viewModel.loadAppLaunchCounts(
+                                    selectedPeriod,
+                                    selectedSortOptionLaunchCount,
+                                    minLaunchCount
+                                )
                                 isSortMenuExpanded = false
                             }
                             MenuItem("App Name Z→A") {
                                 selectedSortOptionLaunchCount = SortOptionLaunchCount.AppNameDescending
-                                viewModel.loadAppLaunchCounts(selectedPeriod, selectedSortOptionLaunchCount, minLaunchCount)
+                                viewModel.loadAppLaunchCounts(
+                                    selectedPeriod,
+                                    selectedSortOptionLaunchCount,
+                                    minLaunchCount
+                                )
                                 isSortMenuExpanded = false
                             }
                         }
                     }
 
                     // filtering
-                    Box{
+                    Box {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier.clickable { isFilterMenuExpanded = !isFilterMenuExpanded }
@@ -242,7 +262,11 @@ fun LaunchCountScreen(
                             listOf(0, 5, 10, 20).forEach { count ->
                                 MenuItem("$count+ Launches") {
                                     minLaunchCount = count
-                                    viewModel.loadAppLaunchCounts(selectedPeriod, selectedSortOptionLaunchCount, minLaunchCount)
+                                    viewModel.loadAppLaunchCounts(
+                                        selectedPeriod,
+                                        selectedSortOptionLaunchCount,
+                                        minLaunchCount
+                                    )
                                     isFilterMenuExpanded = false
                                 }
                             }
@@ -252,13 +276,13 @@ fun LaunchCountScreen(
             }
         },
         content = { paddingValues ->
-            Box (
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-            ){
+            ) {
                 Image(
                     painter = backgroundImage,
-                    contentDescription = null,
+                    contentDescription = "Background image of a barn",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )

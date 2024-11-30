@@ -24,6 +24,20 @@ import com.adamkuraczynski.focusfortress.R
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
+/**
+ * Composable function that displays the blocked content screen.
+ *
+ * Shows a message indicating that the app, website, or keyword is blocked,
+ * along with the app's logo and an option to exit.
+ *
+ * @param blockType The type of content that is blocked ("app", "website", or "keyword").
+ * @param onExit Callback function when the user chooses to exit.
+ *
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.3
+ *
+ */
 @Composable
 fun BlockedScreen(blockType: String, onExit: () -> Unit) {
     val message = when (blockType) {

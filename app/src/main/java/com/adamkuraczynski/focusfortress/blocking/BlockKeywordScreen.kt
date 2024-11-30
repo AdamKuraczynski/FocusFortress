@@ -54,6 +54,22 @@ import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 
+/**
+ * Composable function that displays the screen for blocking keywords.
+ *
+ * Users can add keywords to block, which will prevent content containing these keywords
+ * from being accessed. Users can also remove keywords from the blocked list.
+ *
+ * @param navController The [NavController] for navigating between screens.
+ * @param viewModel The [BlockKeywordViewModel] managing the keyword blocking logic.
+ *
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.4
+ *
+ * @see androidx.navigation.NavController
+ * @see androidx.lifecycle.viewmodel.compose.viewModel
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BlockKeywordScreen(
@@ -181,7 +197,7 @@ fun BlockKeywordScreen(
             ) {
                 Image(
                     painter = backgroundImage,
-                    contentDescription = null,
+                    contentDescription = "Background image of a water well",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -243,6 +259,15 @@ fun BlockKeywordScreen(
     )
 }
 
+/**
+ * Composable function representing a single keyword item in the list.
+ *
+ * Displays the keyword and provides an option to remove it from the blocked list.
+ *
+ * @param blockedKeyword The [BlockedKeyword] object representing the blocked keyword.
+ * @param onRemove Callback function when the keyword is to be removed.
+ *
+ */
 @Composable
 fun KeywordItem(blockedKeyword: BlockedKeyword, onRemove: () -> Unit) {
     Row(

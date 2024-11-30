@@ -49,17 +49,20 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * clicking on the item shows a dialog prompting the user to take action.
  * When the permission is granted, a checkmark icon is displayed.
  *
- * @author Adam Kuraczyński
- * @version 1.5
- *
  * @param title The title of the permission item.
  * @param textProvider The text provider for the permission item.
  * @param granted Indicates whether the permission has already been granted.
  * @param onClick The action to perform when the user interacts with the permission item, typically to request the permission.
  * @param modifier The modifier to apply to the item for layout adjustments.
+ * @param shape The shape of the item, defaulting to a rounded rectangle.
  *
- **/
-
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.3
+ *
+ * @see PermissionDialog
+ * @see PermissionTextProvider
+ */
 @Composable
 fun PermissionItem(
     title: String,
@@ -148,7 +151,7 @@ fun PermissionItem(
                 if (granted) {
                     Icon(
                         imageVector = Icons.Default.CheckCircle,
-                        contentDescription = "Granted",
+                        contentDescription = "Permission Granted",
                         tint = Golden
                     )
                 }

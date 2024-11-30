@@ -49,14 +49,16 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  * If they are, it automatically invokes the `onPermissionsGranted` callback to navigate to the main content.
  * If not, it presents a list of permissions that the user needs to grant, along with options to request them.
  *
- * @author Adam Kuraczyński
- * @version 1.8
- *
  * @param viewModel The [PermissionViewModel] that handles the permission logic and state.
  * @param onPermissionsGranted A callback function invoked when all permissions have been granted.
  *
- **/
-
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.8
+ *
+ * @see PermissionItem
+ * @see PermissionViewModel
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionScreen(
@@ -65,10 +67,9 @@ fun PermissionScreen(
 ) {
     val hasUsageAccessPermission by viewModel.hasUsageAccessPermission.collectAsState()
     val hasOverlayPermission by viewModel.hasOverlayPermission.collectAsState()
-    //val hasNotificationPermission by viewModel.hasNotificationPermission.collectAsState()
     val hasAccessibilityPermission by viewModel.hasAccessibilityPermission.collectAsState()
 
-    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission  && hasAccessibilityPermission // && hasNotificationPermission
+    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission && hasAccessibilityPermission
 
     // permissions update each time the screen is resumed
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -91,7 +92,7 @@ fun PermissionScreen(
     }
 
     if (!allPermissionsGranted) {
-        Scaffold (
+        Scaffold(
             topBar = {
                 CenterAlignedTopAppBar(
                     title = {
@@ -118,7 +119,8 @@ fun PermissionScreen(
                         .background(Color.Transparent)
                         .wrapContentHeight()
                 )
-            }, content = { paddingValues ->
+            },
+            content = { paddingValues ->
 
                 Box(
                     modifier = Modifier
@@ -126,7 +128,7 @@ fun PermissionScreen(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.gate),
-                        contentDescription = "Background image",
+                        contentDescription = "Background image of a castle gate",
                         contentScale = ContentScale.Crop, //fit always
                         modifier = Modifier.fillMaxSize()
                     )
@@ -166,15 +168,6 @@ fun PermissionScreen(
                             onClick = { viewModel.requestOverlayPermission() },
                             modifier = Modifier.background(Brown)
                         )
-
-//                Spacer(modifier = Modifier.height(8.dp))
-//                PermissionItem(
-//                    title = "Notification Access",
-//                    textProvider = NotificationPermissionTextProvider(),
-//                    granted = hasNotificationPermission,
-//                    onClick = { viewModel.requestNotificationAccess() },
-//                    modifier = Modifier.background(DarkBrown)
-//                )
 
                         Spacer(modifier = Modifier.height(8.dp))
 

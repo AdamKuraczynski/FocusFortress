@@ -49,8 +49,9 @@ import com.adamkuraczynski.focusfortress.strictness.StrictnessViewModel
  * - Uses lifecycle observers to update permission status when the app resumes.
  * - Automatically navigates to the permissions screen if permissions are revoked.
  *
- * @author Adam Kuraczyński
- * @version 1.13
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.14
  *
  **/
 
@@ -75,6 +76,17 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * Sets up the main application composable content.
+ *
+ * Initializes the navigation controller and defines the navigation graph for the app,
+ * handling navigation between different screens based on permission status and strictness level.
+ *
+ * @param strictnessViewModel ViewModel managing the strictness level.
+ * @param passcodeViewModel ViewModel managing the passcode.
+ * @param permissionViewModel ViewModel managing permissions.
+ * @param scheduleViewModel ViewModel managing schedules.
+ */
 @Composable
 fun MainApp(
     strictnessViewModel: StrictnessViewModel,

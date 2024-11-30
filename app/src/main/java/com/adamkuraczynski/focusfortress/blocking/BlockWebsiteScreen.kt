@@ -55,6 +55,22 @@ import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 
+/**
+ * Composable function that displays the screen for blocking websites.
+ *
+ * Users can add website URLs or domains to block. Blocked websites will be prevented
+ * from being accessed in supported browsers. Users can also remove websites from the blocked list.
+ *
+ * @param navController The [NavController] for navigating between screens.
+ * @param viewModel The [BlockWebsiteViewModel] managing the website blocking logic.
+ *
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.7
+ *
+ * @see androidx.navigation.NavController
+ * @see androidx.lifecycle.viewmodel.compose.viewModel
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BlockWebsiteScreen(
@@ -181,7 +197,7 @@ fun BlockWebsiteScreen(
             ) {
                 Image(
                     painter = backgroundImage,
-                    contentDescription = null,
+                    contentDescription = "Background image of a kitchen",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -205,7 +221,7 @@ fun BlockWebsiteScreen(
                                 .fillMaxSize(),
                             contentAlignment = Alignment.Center,
 
-                        ) {
+                            ) {
                             Box(
                                 modifier = Modifier
                                     .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -243,6 +259,15 @@ fun BlockWebsiteScreen(
     )
 }
 
+/**
+ * Composable function representing a single website item in the list.
+ *
+ * Displays the website domain and provides an option to unblock it.
+ *
+ * @param blockedWebsite The [BlockedWebsite] object representing the blocked website.
+ * @param onUnblock Callback function when the website is to be unblocked.
+ *
+ */
 @Composable
 fun WebsiteItem(blockedWebsite: BlockedWebsite, onUnblock: () -> Unit) {
     Row(

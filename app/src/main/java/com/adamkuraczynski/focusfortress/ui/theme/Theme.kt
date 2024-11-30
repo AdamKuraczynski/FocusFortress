@@ -18,17 +18,27 @@ import androidx.compose.ui.unit.sp
 import com.adamkuraczynski.focusfortress.R
 
 /**
- * Theme of the FocusFortress application.
+ * Theme configuration for the FocusFortress application.
  *
- * @author Adam Kuraczyński
- * @version 1.4
+ * Sets up color schemes and typography, supporting both light and dark themes,
+ * as well as dynamic color adaptation on supported devices.
+ *
+ * **Author:** Adam Kuraczyński
+ *
+ * **Version:** 1.3
  *
  **/
 
+/**
+ * The custom font family used in the app, based on the "Old London" font.
+ */
 val MedievalFont = FontFamily(
     Font(R.font.oldlondon, weight = FontWeight.Normal)
 )
 
+/**
+ * Custom typography styles used throughout the app.
+ */
 val AppTypography = Typography(
     bodyLarge = TextStyle(
         fontFamily = MedievalFont,
@@ -47,18 +57,32 @@ val AppTypography = Typography(
     )
 )
 
+/**
+ * Color scheme used in dark theme mode.
+ */
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
 
+/**
+ * Color scheme used in light theme mode.
+ */
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
 )
 
+/**
+ * Applies the FocusFortress theme to the composables.
+ *
+ * @param darkTheme Determines if dark theme should be used. Defaults to system setting.
+ * @param dynamicColor Enables dynamic color theming on Android 12+ devices.
+ * @param content The composable content to apply the theme to.
+ *
+ */
 @Composable
 fun FocusFortressTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
