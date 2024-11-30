@@ -1,5 +1,6 @@
 package com.adamkuraczynski.focusfortress.permissions
 
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -54,7 +55,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.8
+ * **Version:** 1.9
  *
  * @see PermissionItem
  * @see PermissionViewModel
@@ -68,8 +69,9 @@ fun PermissionScreen(
     val hasUsageAccessPermission by viewModel.hasUsageAccessPermission.collectAsState()
     val hasOverlayPermission by viewModel.hasOverlayPermission.collectAsState()
     val hasAccessibilityPermission by viewModel.hasAccessibilityPermission.collectAsState()
+    val hasNotificationPermission by viewModel.hasNotificationPermission.collectAsState()
 
-    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission && hasAccessibilityPermission
+    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission && hasAccessibilityPermission && hasNotificationPermission
 
     // permissions update each time the screen is resumed
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -168,6 +170,20 @@ fun PermissionScreen(
                             onClick = { viewModel.requestOverlayPermission() },
                             modifier = Modifier.background(Brown)
                         )
+
+
+                        // api 33+ needed permission request
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            PermissionItem(
+                                title = "Notification Access",
+                                textProvider = NotificationPermissionTextProvider(),
+                                granted = hasNotificationPermission,
+                                onClick = { viewModel.requestNotificationPermission() },
+                                modifier = Modifier.background(Brown)
+                            )
+                        }
 
                         Spacer(modifier = Modifier.height(8.dp))
 

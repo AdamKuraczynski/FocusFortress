@@ -51,7 +51,7 @@ import com.adamkuraczynski.focusfortress.strictness.StrictnessViewModel
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.14
+ * **Version:** 1.15
  *
  **/
 
@@ -97,11 +97,11 @@ fun MainApp(
     val navController = rememberNavController() //screen moving
 
     // observers
-    //val hasNotificationPermission by viewModel.hasNotificationPermission.collectAsState()
     val hasUsageAccessPermission by permissionViewModel.hasUsageAccessPermission.collectAsState() //short for value
     val hasOverlayPermission by permissionViewModel.hasOverlayPermission.collectAsState()
     val hasAccessibilityPermission by permissionViewModel.hasAccessibilityPermission.collectAsState()
-    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission && hasAccessibilityPermission //&& hasNotificationPermission
+    val hasNotificationPermission by permissionViewModel.hasNotificationPermission.collectAsState()
+    val allPermissionsGranted = hasUsageAccessPermission && hasOverlayPermission && hasAccessibilityPermission && hasNotificationPermission
 
     val strictnessLevel by strictnessViewModel.strictnessLevel.collectAsState()
 
