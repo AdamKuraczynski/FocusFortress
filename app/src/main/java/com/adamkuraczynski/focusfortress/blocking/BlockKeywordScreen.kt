@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -39,11 +41,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.adamkuraczynski.focusfortress.R
@@ -65,7 +71,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.4
+ * **Version:** 1.5
  *
  * @see androidx.navigation.NavController
  * @see androidx.lifecycle.viewmodel.compose.viewModel
@@ -85,6 +91,10 @@ fun BlockKeywordScreen(
             it.keyword.contains(keywordInput, ignoreCase = true)
         }
     }
+
+    val textFieldFocusRequester = remember { FocusRequester() }
+    val buttonFocusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
         topBar = {
@@ -149,7 +159,8 @@ fun BlockKeywordScreen(
                                 width = 3.dp,
                                 color = Color.Black,
                                 shape = RoundedCornerShape(8.dp)
-                            ),
+                            )
+                            .focusRequester(textFieldFocusRequester),
                         textStyle = MaterialTheme.typography.bodyLarge.copy(
                             fontFamily = MedievalFont,
                             color = Color.White
@@ -162,6 +173,15 @@ fun BlockKeywordScreen(
                             unfocusedIndicatorColor = Color.Transparent,
                             disabledIndicatorColor = Color.Transparent,
                         ),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                buttonFocusRequester.requestFocus()
+                            }
+                        )
                     )
 
                     Button(
@@ -169,6 +189,9 @@ fun BlockKeywordScreen(
                             if (keywordInput.isNotBlank()) {
                                 viewModel.addKeyword(keywordInput.trim())
                                 keywordInput = ""
+                                textFieldFocusRequester.requestFocus()
+                            } else {
+                                focusManager.clearFocus()
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
@@ -176,7 +199,9 @@ fun BlockKeywordScreen(
                             contentColor = Color.White
                         ),
                         shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.height(48.dp)
+                        modifier = Modifier
+                            .height(48.dp)
+                            .focusRequester(buttonFocusRequester)
                     ) {
                         Text(
                             text = "Add",

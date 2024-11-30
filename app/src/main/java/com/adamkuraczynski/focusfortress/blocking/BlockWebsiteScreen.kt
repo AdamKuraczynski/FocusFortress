@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -49,6 +51,10 @@ import com.adamkuraczynski.focusfortress.R
 import com.adamkuraczynski.focusfortress.database.BlockedWebsite
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
@@ -86,6 +92,10 @@ fun BlockWebsiteScreen(
             it.domain.contains(searchAndWebsiteInput, ignoreCase = true)
         }
     }
+
+    val textFieldFocusRequester = remember { FocusRequester() }
+    val buttonFocusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
         topBar = {
@@ -149,7 +159,8 @@ fun BlockWebsiteScreen(
                                 width = 3.dp,
                                 color = Color.Black,
                                 shape = RoundedCornerShape(8.dp)
-                            ),
+                            )
+                            .focusRequester(textFieldFocusRequester),
                         textStyle = MaterialTheme.typography.bodyLarge.copy(
                             fontFamily = MedievalFont,
                             color = Color.White
@@ -162,6 +173,15 @@ fun BlockWebsiteScreen(
                             unfocusedIndicatorColor = Color.Transparent,
                             disabledIndicatorColor = Color.Transparent,
                         ),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onNext = {
+                                buttonFocusRequester.requestFocus()
+                            }
+                        )
                     )
 
                     Button(
@@ -169,6 +189,9 @@ fun BlockWebsiteScreen(
                             if (searchAndWebsiteInput.isNotBlank()) {
                                 viewModel.blockWebsite(searchAndWebsiteInput.trim())
                                 searchAndWebsiteInput = ""
+                                textFieldFocusRequester.requestFocus()
+                            } else {
+                                focusManager.clearFocus()
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
@@ -176,7 +199,9 @@ fun BlockWebsiteScreen(
                             contentColor = Color.White
                         ),
                         shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.height(48.dp)
+                        modifier = Modifier
+                            .height(48.dp)
+                            .focusRequester(buttonFocusRequester)
                     ) {
                         Text(
                             text = "Add",

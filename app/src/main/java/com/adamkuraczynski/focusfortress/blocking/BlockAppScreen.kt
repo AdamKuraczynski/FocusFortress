@@ -77,7 +77,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.7
+ * **Version:** 1.8
  *
  * @see androidx.navigation.NavController
  * @see androidx.lifecycle.viewmodel.compose.viewModel
@@ -182,7 +182,8 @@ fun BlockAppScreen(
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
                             disabledIndicatorColor = Color.Transparent,
-                        )
+                        ),
+                        singleLine = true
                     )
 
                     Checkbox(
