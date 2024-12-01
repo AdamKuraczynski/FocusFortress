@@ -35,7 +35,7 @@ import java.util.Calendar
 class BlockerService : AccessibilityService() {
 
     private val loggingTag = "BlockerService"
-    private val enableLogging = true
+    private val enableLogging = false
 
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private lateinit var notificationHelper: NotificationHelper
