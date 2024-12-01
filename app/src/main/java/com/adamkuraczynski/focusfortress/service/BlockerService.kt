@@ -5,6 +5,7 @@ import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.content.Intent
 import android.net.Uri.parse
+import android.util.Log
 import com.adamkuraczynski.focusfortress.blocking.BlockedActivity
 import com.adamkuraczynski.focusfortress.database.FocusFortressApp
 import kotlinx.coroutines.CoroutineScope
@@ -26,15 +27,36 @@ import java.util.Calendar
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.5
+ * **Version:** 1.6
  *
  * @see android.accessibilityservice.AccessibilityService
  * @see com.adamkuraczynski.focusfortress.blocking.BlockedActivity
  */
 class BlockerService : AccessibilityService() {
 
+    private val loggingTag = "BlockerService"
+    private val enableLogging = true
+
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private lateinit var notificationHelper: NotificationHelper
+
+    /**
+     * Private logging function for debug messages.
+     */
+    private fun logDebug(message: String) {
+        if (enableLogging) {
+            Log.d(loggingTag, message)
+        }
+    }
+
+    /**
+     * Private logging function for error messages.
+     */
+    private fun logError(message: String, throwable: Throwable? = null) {
+        if (enableLogging) {
+            Log.e(loggingTag, message, throwable)
+        }
+    }
 
     /**
      * Called when the service is created.
@@ -43,6 +65,7 @@ class BlockerService : AccessibilityService() {
      */
     override fun onCreate() {
         super.onCreate()
+        logDebug("onCreate called")
         notificationHelper = NotificationHelper(this)
         val notification = notificationHelper.buildForegroundNotification()
         startForeground(notificationHelper.getNotificationId(), notification)
@@ -52,16 +75,39 @@ class BlockerService : AccessibilityService() {
      * Data class representing supported browsers and their address bar IDs.
      *
      * @property packageName The package name of the browser.
-     * @property addressBarId The resource ID of the browser's address bar.
+     * @property addressBarIds The resource ID of the browser's address bar.
      */
     data class SupportedBrowserConfig(
         val packageName: String,
-        val addressBarId: String
+        val addressBarIds: List<String>
     )
 
     private val supportedBrowsers = listOf(
-        SupportedBrowserConfig("com.android.chrome", "com.android.chrome:id/url_bar"),
-        SupportedBrowserConfig("org.mozilla.firefox", "org.mozilla.firefox:id/mozac_browser_toolbar_url_view"),
+        SupportedBrowserConfig(
+            packageName = "com.android.chrome",
+            addressBarIds = listOf(
+                "com.android.chrome:id/url_bar",
+                "com.android.chrome:id/url_bar_title"
+            )
+        ),
+        SupportedBrowserConfig(
+            packageName= "org.mozilla.firefox",
+            addressBarIds = listOf(
+                "org.mozilla.firefox:id/mozac_browser_toolbar_url_view"
+            )
+        ),
+        SupportedBrowserConfig(
+            packageName= "com.opera.browser",
+            addressBarIds = listOf(
+                "com.opera.browser:id/url_field"
+            )
+        ),
+        SupportedBrowserConfig(
+            packageName= "com.opera.mini.native",
+            addressBarIds = listOf(
+                "com.opera.mini.native:id/url_field"
+            )
+        )
     )
     private var lastBlockedPackageName: String? = null
     private var lastBlockedDomain: String? = null
@@ -72,6 +118,7 @@ class BlockerService : AccessibilityService() {
      * Called when the system wants to interrupt the accessibility feedback.
      */
     override fun onInterrupt() {
+        logDebug("onInterrupt called")
     }
 
     /**
@@ -80,6 +127,7 @@ class BlockerService : AccessibilityService() {
      * Cancels the coroutine scope to clean up resources.
      */
     override fun onDestroy() {
+        logDebug("onDestroy called")
         serviceScope.cancel()
         super.onDestroy()
     }
@@ -90,18 +138,22 @@ class BlockerService : AccessibilityService() {
      * @return `true` if blocking is active; `false` otherwise.
      */
     private suspend fun isBlockingActive(): Boolean {
+        logDebug("Checking if blocking is active")
         val activeSchedule = FocusFortressApp.database.scheduleDao().getActiveSchedule().firstOrNull()
-            ?: return false
+        if (activeSchedule == null) {
+            logDebug("No active schedule found")
+            return false
+        }
 
         val calendar = Calendar.getInstance()
-        val currentDay = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault())?.uppercase()
+        val currentDayNumber = calendar.get(Calendar.DAY_OF_WEEK) // 1 Sunday to 7 Saturday
         val currentTime = String.format(Locale.US, "%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE))
 
-        val daysOfWeek = activeSchedule.daysOfWeek.split(",")
+        val scheduledDayNumbers = activeSchedule.daysOfWeek.split(",").mapNotNull { it.toIntOrNull() }
         val startTime = activeSchedule.startTime
         val endTime = activeSchedule.endTime
 
-        val isDayMatching = currentDay in daysOfWeek
+        val isDayMatching = currentDayNumber in scheduledDayNumbers
 
         val isTimeMatching = if (startTime <= endTime) {
             // time - midnight not crossing
@@ -111,7 +163,13 @@ class BlockerService : AccessibilityService() {
             currentTime >= startTime || currentTime <= endTime
         }
 
-        return isDayMatching && isTimeMatching
+        logDebug("Current day number: $currentDayNumber, Current time: $currentTime")
+        logDebug("Scheduled day numbers: $scheduledDayNumbers, Start time: $startTime, End time: $endTime")
+        logDebug("isDayMatching: $isDayMatching, isTimeMatching: $isTimeMatching")
+
+        val isActive = isDayMatching && isTimeMatching
+        logDebug("Blocking is ${if (isActive) "active" else "inactive"}")
+        return isActive
     }
 
     /**
@@ -120,10 +178,19 @@ class BlockerService : AccessibilityService() {
      * @param event The [AccessibilityEvent] received.
      */
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        if (event == null) return
+        if (event == null) {
+            logDebug("Received null event")
+            return
+        }
 
         val eventType = event.eventType
-        val packageName = event.packageName?.toString() ?: return
+        val packageName = event.packageName?.toString()
+        if (packageName == null) {
+            logDebug("Event package name is null")
+            return
+        }
+
+        logDebug("Received event: Type=$eventType, PackageName=$packageName")
 
         when (eventType) {
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED,
@@ -131,14 +198,16 @@ class BlockerService : AccessibilityService() {
 
                 val browserConfig = supportedBrowsers.find { it.packageName == packageName }
                 if (browserConfig != null) {
+                    logDebug("Event from supported browser: $packageName")
                     handleWebsiteBlocking(event, browserConfig)
                     handleKeywordBlocking(event, browserConfig)
                 } else {
+                    logDebug("Event from app: $packageName")
                     handleAppBlocking(event)
                 }
             }
             else -> {
-                // We do not handle other event types
+                logDebug("Unhandled event type: $eventType")
             }
         }
     }
@@ -151,21 +220,35 @@ class BlockerService : AccessibilityService() {
     private fun handleAppBlocking(event: AccessibilityEvent) {
         val packageName = event.packageName?.toString() ?: return
 
-        if (packageName == this.packageName) return
-        if (packageName == lastBlockedPackageName && System.currentTimeMillis() - lastBlockedTimestamp < 3000) return
+        logDebug("handleAppBlocking called for package: $packageName")
 
-        // coroutine to check if the app is blocked, changed to scope from runBlocking due to main thread blocking
+        if (packageName == this.packageName) {
+            logDebug("Ignoring own package")
+            return
+        }
+
+        if (packageName == lastBlockedPackageName && System.currentTimeMillis() - lastBlockedTimestamp < 3000) {
+            logDebug("Recently blocked package, skipping: $packageName")
+            return
+        }
+
         serviceScope.launch {
-            if (!isBlockingActive()) return@launch // must be run in coroutine to not block main thread!!
-            // database query
+            if (!isBlockingActive()) {
+                logDebug("Blocking is not active, returning")
+                return@launch
+            }
+
+            logDebug("Checking if app is blocked: $packageName")
             val isBlocked = FocusFortressApp.database.blockedAppDao().isAppBlocked(packageName)
+            logDebug("Is app blocked: $isBlocked")
+
             if (isBlocked) {
                 withContext(Dispatchers.Main) {
-
                     lastBlockedPackageName = packageName
                     lastBlockedTimestamp = System.currentTimeMillis()
 
-                    // foreground popup
+                    logDebug("Blocking app: $packageName")
+
                     val intent = Intent(this@BlockerService, BlockedActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     intent.putExtra("BLOCK_TYPE", "app")
@@ -182,24 +265,42 @@ class BlockerService : AccessibilityService() {
      * @param browserConfig The [SupportedBrowserConfig] of the browser.
      */
     private fun handleWebsiteBlocking(event: AccessibilityEvent, browserConfig: SupportedBrowserConfig) {
-        val source = event.source ?: return
+        val source = event.source
+        if (source == null) {
+            logDebug("Event source is null")
+            return
+        }
+
         val url = captureUrl(source, browserConfig)
+        logDebug("Captured URL: $url")
 
         if (url != null) {
             val domain = extractDomain(url)?.lowercase(Locale.getDefault())?.removePrefix("www.")
+            logDebug("Extracted domain: $domain")
 
             if (domain != null) {
 
-                if (domain == lastBlockedDomain && System.currentTimeMillis() - lastBlockedTimestamp < 500) return
+                if (domain == lastBlockedDomain && System.currentTimeMillis() - lastBlockedTimestamp < 500) {
+                    logDebug("Recently blocked domain, skipping: $domain")
+                    return
+                }
 
                 serviceScope.launch {
-                    if (!isBlockingActive()) return@launch
+                    if (!isBlockingActive()) {
+                        logDebug("Blocking is not active, returning")
+                        return@launch
+                    }
+
+                    logDebug("Checking if website is blocked: $domain")
                     val isBlocked = FocusFortressApp.database.blockedWebsiteDao().isWebsiteBlocked(domain)
+                    logDebug("Is website blocked: $isBlocked")
+
                     if (isBlocked) {
                         withContext(Dispatchers.Main) {
-
                             lastBlockedDomain = domain
                             lastBlockedTimestamp = System.currentTimeMillis()
+
+                            logDebug("Blocking website: $domain")
 
                             val intent = Intent(this@BlockerService, BlockedActivity::class.java).apply {
                                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -230,6 +331,7 @@ class BlockerService : AccessibilityService() {
             val domain = uri.host?.lowercase(Locale.getDefault())?.removePrefix("www.")
             domain
         } catch (e: Exception) {
+            logError("Error extracting domain from URL: $url", e)
             null
         }
     }
@@ -243,18 +345,31 @@ class BlockerService : AccessibilityService() {
     private fun handleKeywordBlocking(event: AccessibilityEvent, browserConfig: SupportedBrowserConfig) {
         val packageName = event.packageName?.toString() ?: return
 
-        if (packageName == this.packageName) return
+        logDebug("handleKeywordBlocking called for package: $packageName")
 
-        val source = event.source ?: return
+        if (packageName == this.packageName) {
+            logDebug("Ignoring own package")
+            return
+        }
+
+        val source = event.source
+        if (source == null) {
+            logDebug("Event source is null")
+            return
+        }
+
         val url = captureUrl(source, browserConfig)
+        logDebug("Captured URL for keyword blocking: $url")
 
         if (url != null) {
             val searchText = extractSearchTextFromUrl(url)
+            logDebug("Extracted search text from URL: $searchText")
             if (searchText != null) {
                 handleKeywordBlockingHelper(searchText, browserConfig)
             }
         } else {
             val eventText = event.text.joinToString(" ")
+            logDebug("Event text for keyword blocking: $eventText")
             if (eventText.isNotEmpty()) {
                 val normalizedText = eventText.lowercase(Locale.getDefault())
                 handleKeywordBlockingHelper(normalizedText, browserConfig)
@@ -272,6 +387,7 @@ class BlockerService : AccessibilityService() {
         val uri = try {
             parse(url)
         } catch (e: Exception) {
+            logError("Error parsing URL for search text: $url", e)
             return null
         }
 
@@ -294,12 +410,27 @@ class BlockerService : AccessibilityService() {
      * @param browserConfig The [SupportedBrowserConfig] of the browser.
      */
     private fun handleKeywordBlockingHelper(searchText: String, browserConfig: SupportedBrowserConfig) {
-        if (searchText.isEmpty()) return
+        if (searchText.isEmpty()) {
+            logDebug("Search text is empty, returning")
+            return
+        }
+
+        logDebug("handleKeywordBlockingHelper called with searchText: $searchText")
 
         serviceScope.launch {
-            if (!isBlockingActive()) return@launch
-            val blockedKeywords = FocusFortressApp.database.blockedKeywordDao().getBlockedKeywords().firstOrNull() ?: return@launch
+            if (!isBlockingActive()) {
+                logDebug("Blocking is not active, returning")
+                return@launch
+            }
+
+            val blockedKeywords = FocusFortressApp.database.blockedKeywordDao().getBlockedKeywords().firstOrNull()
+            if (blockedKeywords.isNullOrEmpty()) {
+                logDebug("No blocked keywords found")
+                return@launch
+            }
+
             val normalizedQuery = searchText.lowercase(Locale.getDefault())
+            logDebug("Normalized search text: $normalizedQuery")
 
             val matchedKeyword = blockedKeywords.find { keyword ->
                 normalizedQuery.contains(keyword.keyword, ignoreCase = true)
@@ -309,10 +440,15 @@ class BlockerService : AccessibilityService() {
                 withContext(Dispatchers.Main) {
                     if (matchedKeyword.keyword == lastBlockedKeyword &&
                         System.currentTimeMillis() - lastBlockedTimestamp < 3000
-                    ) return@withContext
+                    ) {
+                        logDebug("Recently blocked keyword, skipping: ${matchedKeyword.keyword}")
+                        return@withContext
+                    }
 
                     lastBlockedKeyword = matchedKeyword.keyword
                     lastBlockedTimestamp = System.currentTimeMillis()
+
+                    logDebug("Blocking keyword: ${matchedKeyword.keyword}")
 
                     val intent = Intent(this@BlockerService, BlockedActivity::class.java).apply {
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -322,6 +458,8 @@ class BlockerService : AccessibilityService() {
                     }
                     startActivity(intent)
                 }
+            } else {
+                logDebug("No matching blocked keyword found in search text")
             }
         }
     }
@@ -334,15 +472,20 @@ class BlockerService : AccessibilityService() {
      * @return The URL string if found; `null` otherwise.
      */
     private fun captureUrl(info: AccessibilityNodeInfo, browserConfig: SupportedBrowserConfig): String? {
-        try {
-            val nodes = info.findAccessibilityNodeInfosByViewId(browserConfig.addressBarId)
-            if (nodes.isNullOrEmpty()) {
-                return null
+        for (addressBarId in browserConfig.addressBarIds) {
+            try {
+                val nodes = info.findAccessibilityNodeInfosByViewId(addressBarId)
+                if (!nodes.isNullOrEmpty()) {
+                    val url = nodes[0].text?.toString()
+                    logDebug("Captured URL from address bar ID $addressBarId: $url")
+                    return url
+                } else {
+                    logDebug("No nodes found for address bar ID: $addressBarId")
+                }
+            } catch (e: Exception) {
+                logError("Error capturing URL from address bar ID: $addressBarId", e)
             }
-            val url = nodes[0].text?.toString()
-            return url
-        } catch (e: Exception) {
-            return null
         }
+        return null
     }
 }

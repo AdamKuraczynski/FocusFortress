@@ -50,6 +50,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.adamkuraczynski.focusfortress.R
 import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
+import com.adamkuraczynski.focusfortress.ui.theme.DarkGray
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
@@ -194,6 +195,7 @@ fun LaunchCountScreen(
                         DropdownMenu(
                             expanded = isSortMenuExpanded,
                             onDismissRequest = { isSortMenuExpanded = false },
+                            modifier = Modifier.background(DarkGray),
                         ) {
                             MenuItem("Launch Count ↓") {
                                 selectedSortOptionLaunchCount = SortOptionLaunchCount.LaunchCountDescending
@@ -258,6 +260,7 @@ fun LaunchCountScreen(
                         DropdownMenu(
                             expanded = isFilterMenuExpanded,
                             onDismissRequest = { isFilterMenuExpanded = false },
+                            modifier = Modifier.background(DarkGray),
                         ) {
                             listOf(0, 5, 10, 20).forEach { count ->
                                 MenuItem("$count+ Launches") {

@@ -10,14 +10,14 @@ import androidx.room.PrimaryKey
  *
  * @property id The unique identifier for the schedule.
  * @property name The name of the schedule.
- * @property daysOfWeek A comma-separated string of days when the schedule is active.
+ * @property daysOfWeek A comma-separated string of day numbers when the schedule is active
  * @property startTime The start time of the schedule in "HH:mm" format.
  * @property endTime The end time of the schedule in "HH:mm" format.
  * @property isActive Indicates whether the schedule is currently active.
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.1
+ * **Version:** 1.2
  *
  * @see androidx.room.Entity
  * @see androidx.room.PrimaryKey

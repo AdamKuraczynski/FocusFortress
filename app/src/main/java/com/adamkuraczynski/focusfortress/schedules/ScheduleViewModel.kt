@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.1
+ * **Version:** 1.2
  *
  * @see com.adamkuraczynski.focusfortress.database.ScheduleDao
  * @see kotlinx.coroutines.flow.StateFlow
@@ -69,7 +69,16 @@ class ScheduleViewModel : ViewModel() {
 }
 
 /**
- * Provides a predefined list of schedules.
+ * Provides a predefined list of schedules using day numbers.
+ *
+ * Day numbers:
+ * 1 - Sunday
+ * 2 - Monday
+ * 3 - Tuesday
+ * 4 - Wednesday
+ * 5 - Thursday
+ * 6 - Friday
+ * 7 - Saturday
  *
  * @return A list of [Schedule] objects.
  */
@@ -77,32 +86,32 @@ private fun getSchedules(): List<Schedule> {
     return listOf(
         Schedule(
             name = "Always On",
-            daysOfWeek = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY",
+            daysOfWeek = "1,2,3,4,5,6,7", // All days
             startTime = "00:00",
             endTime = "23:59",
             isActive = true
         ),
         Schedule(
             name = "Weekdays",
-            daysOfWeek = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY",
+            daysOfWeek = "2,3,4,5,6", // Monday to Friday
             startTime = "00:00",
             endTime = "23:59"
         ),
         Schedule(
             name = "Weekends",
-            daysOfWeek = "SATURDAY,SUNDAY",
+            daysOfWeek = "1,7", // Sunday and Saturday
             startTime = "00:00",
             endTime = "23:59"
         ),
         Schedule(
             name = "Work Hours",
-            daysOfWeek = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY",
+            daysOfWeek = "2,3,4,5,6", // Monday to Friday
             startTime = "09:00",
             endTime = "17:00"
         ),
         Schedule(
             name = "Evenings",
-            daysOfWeek = "MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY",
+            daysOfWeek = "1,2,3,4,5,6,7", // All days
             startTime = "18:00",
             endTime = "23:00"
         )

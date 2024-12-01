@@ -48,4 +48,4 @@ val DarkBrown = Color(0xFF3B2F2F)
 /** A dark brown color for text and icons on light backgrounds. */
 
 val DarkGray = Color(0xFF2F2D38)
-/** A dark gray color used for PermissionDialog. */
+/** A dark gray color used for PermissionDialog and DropdownMenu Background. */

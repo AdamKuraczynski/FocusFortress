@@ -50,6 +50,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.adamkuraczynski.focusfortress.R
 import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
+import com.adamkuraczynski.focusfortress.ui.theme.DarkGray
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
@@ -193,6 +194,7 @@ fun ScreenTimeScreen(
                         DropdownMenu(
                             expanded = isSortMenuExpanded,
                             onDismissRequest = { isSortMenuExpanded = false },
+                            modifier = Modifier.background(DarkGray),
                         ) {
                             MenuItem("Usage Time ↓") {
                                 selectedSortOption = SortOptionScreenTime.UsageTimeDescending
@@ -260,6 +262,7 @@ fun ScreenTimeScreen(
                         DropdownMenu(
                             expanded = isFilterMenuExpanded,
                             onDismissRequest = { isFilterMenuExpanded = false },
+                            modifier = Modifier.background(DarkGray),
                         ) {
                             // Options: 0m, 15m, 1h, 5h
                             listOf(0L, 900000L, 3600000L, 18000000L).forEach { time ->
