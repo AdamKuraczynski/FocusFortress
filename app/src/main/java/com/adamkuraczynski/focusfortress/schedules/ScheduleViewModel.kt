@@ -9,19 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel responsible for managing schedules in the FocusFortress application.
- *
- * This class interacts with the database to retrieve, insert, and update schedules.
- * It provides state flows for observing all schedules and the currently active schedule.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.2
- *
- * @see com.adamkuraczynski.focusfortress.database.ScheduleDao
- * @see kotlinx.coroutines.flow.StateFlow
- */
+
 class ScheduleViewModel : ViewModel() {
 
     private val scheduleDao = FocusFortressApp.database.scheduleDao()
@@ -32,11 +20,7 @@ class ScheduleViewModel : ViewModel() {
     val activeSchedule: StateFlow<Schedule?> = scheduleDao.getActiveSchedule()
         .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
-    /**
-     * Selects a schedule by its ID and activates it, deactivating others.
-     *
-     * @param scheduleId The ID of the schedule to activate.
-     */
+    
     fun selectSchedule(scheduleId: Int) {
         viewModelScope.launch {
             scheduleDao.deactivateAllSchedules()
@@ -44,11 +28,7 @@ class ScheduleViewModel : ViewModel() {
         }
     }
 
-    /**
-     * Inserts a list of schedules into the database.
-     *
-     * @param schedules The list of schedules to insert.
-     */
+    
     private fun insertSchedules(schedules: List<Schedule>) {
         viewModelScope.launch {
             scheduleDao.deleteAllSchedules()
@@ -68,20 +48,7 @@ class ScheduleViewModel : ViewModel() {
     }
 }
 
-/**
- * Provides a predefined list of schedules using day numbers.
- *
- * Day numbers:
- * 1 - Sunday
- * 2 - Monday
- * 3 - Tuesday
- * 4 - Wednesday
- * 5 - Thursday
- * 6 - Friday
- * 7 - Saturday
- *
- * @return A list of [Schedule] objects.
- */
+
 private fun getSchedules(): List<Schedule> {
     return listOf(
         Schedule(

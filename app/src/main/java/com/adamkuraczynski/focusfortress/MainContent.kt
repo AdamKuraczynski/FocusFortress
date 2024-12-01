@@ -46,17 +46,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
-/**
- * Displays the main menu of the Focus Fortress application with medieval styling.
- *
- * This composable function sets up the primary user interface of the app after all necessary permissions have been granted.
- * It includes navigation to various features like usage statistics, blocking options, and other settings.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.10
- *
- */
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -250,16 +240,7 @@ fun MainContent(navController: NavController) {
 }
 
 
-/**
- * A styled button with an icon and text used in the main content.
- *
- * @param text The text to display on the button.
- * @param onClick The action to perform when the button is clicked.
- * @param iconRes The resource ID of the icon to display.
- * @param contentDescription A description of the icon for accessibility.
- * @param modifier The modifier to be applied to the button.
- * @param shape The shape of the button.
- */
+
 @Composable
 fun StyledIconButton(
     text: String,

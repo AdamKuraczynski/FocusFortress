@@ -34,24 +34,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.LightGolden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
-/**
- * A composable function that displays an option item with a description and selection state.
- *
- * This component is used to display options in a list where users can select one.
- * It visually indicates the selected state and handles user interactions.
- *
- * @param description The description text for the option.
- * @param isSelected Indicates whether the option is currently selected.
- * @param onSelect Callback function invoked when the option is selected.
- * @param shape The shape of the option item. Defaults to [RoundedCornerShape] with 16.dp radius.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.3
- *
- * @see androidx.compose.material3.Card
- * @see androidx.compose.foundation.clickable
- */
+
 @Composable
 fun OptionItem(
     description: String,

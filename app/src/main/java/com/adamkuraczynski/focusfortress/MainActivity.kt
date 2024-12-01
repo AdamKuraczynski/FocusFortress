@@ -32,28 +32,7 @@ import com.adamkuraczynski.focusfortress.strictness.PasscodeSetupScreen
 import com.adamkuraczynski.focusfortress.strictness.PasscodeViewModel
 import com.adamkuraczynski.focusfortress.strictness.StrictnessViewModel
 
-/**
- * The main entry point of the FocusFortress application.
- *
- * This activity initializes the Jetpack Compose UI and sets up the main navigation graph.
- * It handles the navigation between the permission request screen and the main content screen,
- * ensuring that the app only proceeds to the main content if all required permissions are granted.
- *
- * **Navigation Flow:**
- * - If all permissions are granted, starts with the "main" screen.
- * - If any permissions are missing, starts with the "permissions" screen.
- * - Continuously monitors permission status and navigates accordingly.
- *
- * **Permission Handling:**
- * - Observes the permission status using a shared [PermissionViewModel].
- * - Uses lifecycle observers to update permission status when the app resumes.
- * - Automatically navigates to the permissions screen if permissions are revoked.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.15
- *
- **/
+
 
 class MainActivity : ComponentActivity() {
     private val strictnessViewModel: StrictnessViewModel by viewModels()
@@ -76,17 +55,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-/**
- * Sets up the main application composable content.
- *
- * Initializes the navigation controller and defines the navigation graph for the app,
- * handling navigation between different screens based on permission status and strictness level.
- *
- * @param strictnessViewModel ViewModel managing the strictness level.
- * @param passcodeViewModel ViewModel managing the passcode.
- * @param permissionViewModel ViewModel managing permissions.
- * @param scheduleViewModel ViewModel managing schedules.
- */
+
 @Composable
 fun MainApp(
     strictnessViewModel: StrictnessViewModel,

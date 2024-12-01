@@ -43,23 +43,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.Brown
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
-/**
- * Displays the permission screen where the user can grant necessary permissions.
- *
- * This composable function checks if all required permissions are granted.
- * If they are, it automatically invokes the `onPermissionsGranted` callback to navigate to the main content.
- * If not, it presents a list of permissions that the user needs to grant, along with options to request them.
- *
- * @param viewModel The [PermissionViewModel] that handles the permission logic and state.
- * @param onPermissionsGranted A callback function invoked when all permissions have been granted.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.9
- *
- * @see PermissionItem
- * @see PermissionViewModel
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PermissionScreen(

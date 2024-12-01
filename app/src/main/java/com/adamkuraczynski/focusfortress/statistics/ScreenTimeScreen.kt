@@ -55,21 +55,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
 
-/**
- * Displays the screen time usage for apps over different time periods.
- *
- * This composable function retrieves app usage data from the [ScreenTimeViewModel] and
- * presents it in a scrollable list, allowing users to toggle between different time periods.
- * The screen includes a styled top bar with navigation controls and period selection options.
- *
- * @param navController The [NavController] used to navigate between app screens.
- * @param viewModel The [ScreenTimeViewModel] providing app usage data.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.10
- *
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScreenTimeScreen(

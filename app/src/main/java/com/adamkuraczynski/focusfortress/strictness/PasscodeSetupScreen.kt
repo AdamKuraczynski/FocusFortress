@@ -57,26 +57,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
-/**
- * Composable function that displays the passcode setup screen.
- *
- * Users can enter a 6-digit passcode to secure the app when "Protected" strictness is selected.
- * The passcode is saved using the [PasscodeViewModel].
- *
- * @param navController The [NavController] for navigating between screens.
- * @param passcodeViewModel The [PasscodeViewModel] managing the passcode.
- * @param strictnessViewModel The [StrictnessViewModel] managing strictness levels.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.7
- *
- * @see androidx.navigation.NavController
- * @see androidx.compose.material3.OutlinedTextField
- *
- * @see PasscodeEntryScreen
- * @see SelectStrictnessScreen
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasscodeSetupScreen(

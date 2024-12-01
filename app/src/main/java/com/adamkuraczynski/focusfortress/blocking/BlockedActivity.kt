@@ -9,18 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import com.adamkuraczynski.focusfortress.ui.theme.FocusFortressTheme
 
-/**
- * Activity that is displayed when a blocked app, website, or keyword is accessed.
- *
- * This activity prevents the user from accessing the blocked content and provides
- * an option to exit back to the home screen or a safe location.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.4
- *
- * @see androidx.activity.ComponentActivity
- */
+
 class BlockedActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,9 +36,7 @@ class BlockedActivity : ComponentActivity() {
 
     }
 
-    /**
-     * Navigates the user to the home screen.
-     */
+    
     private fun goToHomeScreen() {
         val intent = Intent(Intent.ACTION_MAIN).apply {
             addCategory(Intent.CATEGORY_HOME)
@@ -58,11 +45,7 @@ class BlockedActivity : ComponentActivity() {
         startActivity(intent)
     }
 
-    /**
-     * Opens a new tab in the specified browser.
-     *
-     * @param browserPackage The package name of the browser.
-     */
+    
     private fun openNewTabInBrowser(browserPackage: String) {
         try {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://google.com")).apply {
@@ -77,12 +60,7 @@ class BlockedActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * Handles the exit action based on the block type.
-     *
-     * @param blockType The type of content that was blocked ("app", "website", "keyword").
-     * @param browserPackage The package name of the browser, if applicable.
-     */
+    
     private fun handleExit(blockType: String = "app", browserPackage: String? = null) {
         when (blockType) {
             "website", "keyword" -> {

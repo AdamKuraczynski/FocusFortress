@@ -15,25 +15,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
-/**
- * Displays a dialog prompting the user to grant a permission.
- *
- * This composable function shows an alert dialog with a title, description,
- * and two buttons: "OK" and "Cancel". The dialog is intended to inform the user
- * about a required permission and prompt them to take action.
- *
- * @param title The title of the dialog.
- * @param description The description of the dialog.
- * @param onDismiss The action to perform when the dialog is dismissed.
- * @param onOkClick The action to perform when the user clicks the OK button.
- * @param modifier The modifier to apply to the dialog.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.3
- *
- * @see androidx.compose.material3.AlertDialog
- */
+
 @Composable
 fun PermissionDialog(
     title: String,

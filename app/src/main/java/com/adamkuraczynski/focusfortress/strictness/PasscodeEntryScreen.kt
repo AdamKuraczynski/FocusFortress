@@ -58,22 +58,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
-/**
- * Composable function that displays the passcode entry screen.
- *
- * Users are prompted to enter their passcode to access the main content of the app.
- * If the passcode matches the stored value, they are navigated to the main screen.
- *
- * @param navController The [NavController] for navigating between screens.
- * @param passcodeViewModel The [PasscodeViewModel] managing the passcode.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.6
- *
- * @see androidx.navigation.NavController
- * @see androidx.compose.material3.OutlinedTextField
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasscodeEntryScreen(

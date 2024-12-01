@@ -29,18 +29,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
-/**
- * Composable function that displays an individual app item with its icon, name, and detail text.
- *
- * This function handles both `AppLaunchCount` and `AppUsage` data types,
- * displaying appropriate information based on the type.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.4
- *
- * @param app The app data, which can be an instance of [AppLaunchCount] or [AppUsage].
- */
+
 @Composable
 fun AppItem(app: Any) {
     Row(
@@ -113,12 +102,7 @@ fun AppItem(app: Any) {
     }
 }
 
-/**
- * Formats time in milliseconds to a string in the format "HH:mm:ss".
- *
- * @param timeMillis The time in milliseconds.
- * @return A formatted time string in "HH:mm:ss" format.
- */
+
 @SuppressLint("DefaultLocale")
 fun formatTime(timeMillis: Long): String {
     val totalSeconds = timeMillis / 1000

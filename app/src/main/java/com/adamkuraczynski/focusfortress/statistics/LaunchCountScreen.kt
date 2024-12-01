@@ -54,22 +54,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.DarkGray
 import com.adamkuraczynski.focusfortress.ui.theme.Golden
 import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
 
-/**
- * Displays the app launch count screen, where users can view app launch counts
- * over different time periods ("Day", "3 Days", "Week").
- *
- * This composable function retrieves app launch data from the [LaunchCountViewModel] and
- * presents it in a scrollable list, allowing users to toggle between different time periods.
- * The screen also includes a styled top bar with navigation controls and period selection options.
- *
- * @param navController The [NavController] used to navigate between app screens.
- * @param viewModel The [LaunchCountViewModel] providing app launch data.
- *
- * **Author:** Adam Kuraczyński
- *
- * **Version:** 1.10
- *
- */
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LaunchCountScreen(
