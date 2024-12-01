@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.4
+ * **Version:** 1.5
  *
  **/
 
@@ -35,7 +35,7 @@ val Pink40 = Color(0xFF7D5260)
 val LightGolden = Color(0xFFD4A373)
 /** A light golden color for highlights and emphasis. */
 
-val Golden = Color(0xFFE0C097)
+val Golden = Color(0xFFDCC4A3)
 /** A golden color used throughout the app for a medieval aesthetic. */
 
 val LightBrown = Color(0xFF6D4C41)

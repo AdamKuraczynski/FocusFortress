@@ -52,6 +52,8 @@ import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -77,7 +79,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.LightBrown
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.8
+ * **Version:** 1.9
  *
  * @see androidx.navigation.NavController
  * @see androidx.lifecycle.viewmodel.compose.viewModel
@@ -168,7 +170,7 @@ fun BlockAppScreen(
                             .padding(horizontal = 8.dp)
                             .border(
                                 width = 3.dp,
-                                color = Color.Black,
+                                color = Golden,
                                 shape = RoundedCornerShape(8.dp)
                             ),
                         textStyle = MaterialTheme.typography.bodyLarge.copy(
@@ -315,6 +317,7 @@ fun AppItem(appInfo: AppInfo, isBlocked: Boolean, onToggleBlock: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onToggleBlock() }
+            .semantics { contentDescription = "${appInfo.appName}, ${if (isBlocked) "Blocked" else "Not Blocked"}" }
             .padding(vertical = 8.dp)
             .background(
                 LightBrown,
