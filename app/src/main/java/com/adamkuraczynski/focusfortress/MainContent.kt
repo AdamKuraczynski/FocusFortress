@@ -54,7 +54,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.9
+ * **Version:** 1.10
  *
  */
 
@@ -118,15 +118,22 @@ fun MainContent(navController: NavController) {
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Usage Statistics
-                    Text(
-                        text = "Usage Statistics",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = Golden,
-                            fontFamily = MedievalFont,
-                            fontSize = 32.sp
-                        ),
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Black, shape = RoundedCornerShape(16.dp))
+                            .padding(8.dp)
+                            .align(Alignment.CenterHorizontally),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Usage Statistics",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = Golden,
+                                fontFamily = MedievalFont,
+                                fontSize = 32.sp
+                            )
+                        )
+                    }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.fillMaxWidth()
@@ -148,15 +155,22 @@ fun MainContent(navController: NavController) {
                     }
 
                     // Blocking Options
-                    Text(
-                        text = "Blocking Options",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = Golden,
-                            fontFamily = MedievalFont,
-                            fontSize = 32.sp
-                        ),
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Black, shape = RoundedCornerShape(16.dp))
+                            .padding(8.dp)
+                            .align(Alignment.CenterHorizontally),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Blocking Options",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = Golden,
+                                fontFamily = MedievalFont,
+                                fontSize = 32.sp
+                            )
+                        )
+                    }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.fillMaxWidth()
@@ -194,15 +208,22 @@ fun MainContent(navController: NavController) {
                     }
 
                     // Other Options
-                    Text(
-                        text = "Other Options",
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            color = Golden,
-                            fontFamily = MedievalFont,
-                            fontSize = 32.sp
-                        ),
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Black, shape = RoundedCornerShape(16.dp))
+                            .padding(8.dp)
+                            .align(Alignment.CenterHorizontally),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Other Options",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                color = Golden,
+                                fontFamily = MedievalFont,
+                                fontSize = 32.sp
+                            )
+                        )
+                    }
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier.fillMaxWidth()

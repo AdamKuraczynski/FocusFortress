@@ -69,7 +69,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.6
+ * **Version:** 1.7
  *
  * @see androidx.navigation.NavController
  * @see androidx.compose.material3.OutlinedTextField
@@ -192,7 +192,7 @@ fun PasscodeSetupScreen(
                                     style = MaterialTheme.typography.bodyLarge.copy(
                                         fontSize = 24.sp,
                                         fontFamily = MedievalFont,
-                                        color = Color.Gray,
+                                        color = Golden,
                                         textAlign = TextAlign.Center
                                     )
                                 )

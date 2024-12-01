@@ -72,7 +72,7 @@ import com.adamkuraczynski.focusfortress.ui.theme.MedievalFont
  *
  * **Author:** Adam Kuraczyński
  *
- * **Version:** 1.7
+ * **Version:** 1.8
  *
  * @see androidx.navigation.NavController
  * @see androidx.lifecycle.viewmodel.compose.viewModel
@@ -157,7 +157,7 @@ fun BlockWebsiteScreen(
                             .padding(horizontal = 16.dp)
                             .border(
                                 width = 3.dp,
-                                color = Color.Black,
+                                color = Golden,
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .focusRequester(textFieldFocusRequester),
