@@ -161,6 +161,7 @@ class BlockerService : AccessibilityService() {
                     logDebug("Event from supported browser: $packageName")
                     handleWebsiteBlocking(event, browserConfig)
                     handleKeywordBlocking(event, browserConfig)
+                    handleAppBlocking(event)
                 } else {
                     logDebug("Event from app: $packageName")
                     handleAppBlocking(event)
@@ -199,7 +200,7 @@ class BlockerService : AccessibilityService() {
             logDebug("Is app blocked: $isBlocked")
 
             if (isBlocked) {
-                withContext(Dispatchers.Main) {
+                withContext(Dispatchers.Main) { // back to main thread
                     lastBlockedPackageName = packageName
                     lastBlockedTimestamp = System.currentTimeMillis()
 
