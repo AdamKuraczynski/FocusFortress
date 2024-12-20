@@ -26,4 +26,8 @@ interface BlockedAppDao {
     
     @Query("SELECT EXISTS(SELECT 1 FROM blocked_apps WHERE packageName = :packageName)")
     suspend fun isAppBlocked(packageName: String): Boolean
+
+
+    @Query("SELECT COUNT(*) FROM blocked_apps")
+    suspend fun getBlockedAppsCount(): Int
 }

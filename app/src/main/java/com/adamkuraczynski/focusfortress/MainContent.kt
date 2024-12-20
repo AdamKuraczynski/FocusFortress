@@ -233,6 +233,22 @@ fun MainContent(navController: NavController) {
                             modifier = Modifier.weight(1f)
                         )
                     }
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        // spacers fix to center the third button in the middle - could not find other way
+                        Spacer(modifier = Modifier.weight(1f))
+                        StyledIconButton(
+                            text = "Achievements",
+                            onClick = { navController.navigate("achievements") },
+                            iconRes = R.drawable.medal,
+                            contentDescription = "Decorative Icon",
+                            modifier = Modifier
+                                .weight(2f)
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
                 }
             }
         }

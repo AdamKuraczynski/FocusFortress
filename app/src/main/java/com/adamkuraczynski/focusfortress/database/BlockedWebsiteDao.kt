@@ -27,4 +27,7 @@ interface BlockedWebsiteDao {
     @Query("SELECT EXISTS(SELECT 1 FROM blocked_websites WHERE domain = :domain)")
     suspend fun isWebsiteBlocked(domain: String): Boolean
 
+
+    @Query("SELECT COUNT(*) FROM blocked_websites")
+    suspend fun getBlockedWebsitesCount(): Int
 }

@@ -26,4 +26,8 @@ interface BlockedKeywordDao {
     
     @Query("SELECT EXISTS(SELECT 1 FROM blocked_keywords WHERE keyword = :keyword)")
     suspend fun isKeywordBlocked(keyword: String): Boolean
+
+
+    @Query("SELECT COUNT(*) FROM blocked_keywords")
+    suspend fun getBlockedKeywordsCount(): Int
 }

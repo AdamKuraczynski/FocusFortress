@@ -16,6 +16,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.adamkuraczynski.focusfortress.achievements.AchievementScreen
+import com.adamkuraczynski.focusfortress.achievements.AchievementsViewModel
 import com.adamkuraczynski.focusfortress.permissions.PermissionScreen
 import com.adamkuraczynski.focusfortress.permissions.PermissionViewModel
 import com.adamkuraczynski.focusfortress.blocking.BlockKeywordScreen
@@ -39,6 +41,7 @@ class MainActivity : ComponentActivity() {
     private val passcodeViewModel: PasscodeViewModel by viewModels()
     private val permissionViewModel: PermissionViewModel by viewModels()
     private val scheduleViewModel: ScheduleViewModel by viewModels()
+    private val achievementsViewModel: AchievementsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +51,8 @@ class MainActivity : ComponentActivity() {
                     strictnessViewModel = strictnessViewModel,
                     passcodeViewModel = passcodeViewModel,
                     permissionViewModel = permissionViewModel,
-                    scheduleViewModel = scheduleViewModel
+                    scheduleViewModel = scheduleViewModel,
+                    achievementsViewModel = achievementsViewModel
                 )
             }
         }
@@ -61,7 +65,8 @@ fun MainApp(
     strictnessViewModel: StrictnessViewModel,
     passcodeViewModel: PasscodeViewModel,
     permissionViewModel: PermissionViewModel,
-    scheduleViewModel: ScheduleViewModel
+    scheduleViewModel: ScheduleViewModel,
+    achievementsViewModel: AchievementsViewModel
 ) {
     val navController = rememberNavController() //screen moving
 
@@ -153,6 +158,9 @@ fun MainApp(
         }
         composable("schedules") {
             ScheduleScreen(navController, scheduleViewModel)
+        }
+        composable("achievements") {
+            AchievementScreen(navController, achievementsViewModel)
         }
     }
 }

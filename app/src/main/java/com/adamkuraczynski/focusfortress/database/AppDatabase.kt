@@ -10,9 +10,10 @@ import androidx.room.RoomDatabase
         BlockedWebsite::class,
         BlockedKeyword::class,
         Passcode::class,
-        Schedule::class
+        Schedule::class,
+        Achievement::class
     ],
-    version = 7
+    version = 8
 )
 abstract class AppDatabase : RoomDatabase() {
     
@@ -29,4 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     
     abstract fun scheduleDao(): ScheduleDao
+
+
+    abstract fun achievementDao(): AchievementDao
 }

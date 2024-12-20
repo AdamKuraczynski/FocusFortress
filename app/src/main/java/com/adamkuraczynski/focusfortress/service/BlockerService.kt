@@ -159,9 +159,9 @@ class BlockerService : AccessibilityService() {
                 val browserConfig = supportedBrowsers.find { it.packageName == packageName }
                 if (browserConfig != null) {
                     logDebug("Event from supported browser: $packageName")
+                    handleAppBlocking(event)
                     handleWebsiteBlocking(event, browserConfig)
                     handleKeywordBlocking(event, browserConfig)
-                    handleAppBlocking(event)
                 } else {
                     logDebug("Event from app: $packageName")
                     handleAppBlocking(event)

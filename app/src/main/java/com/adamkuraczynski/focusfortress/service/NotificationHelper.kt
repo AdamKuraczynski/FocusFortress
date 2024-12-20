@@ -19,6 +19,7 @@ class NotificationHelper(private val context: Context) {
 
     init {
         createNotificationChannel()
+        createAchievementChannel()
     }
 
     
@@ -46,4 +47,36 @@ class NotificationHelper(private val context: Context) {
 
     
     fun getNotificationId(): Int = NOTIFICATION_ID
+
+
+    private fun createAchievementChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "focus_fortress_achievements",
+                "Achievements",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "Achievement notifications"
+            }
+            val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
+        }
+    }
+
+    fun showAchievementNotification(achievementTitle: String) {
+        val notificationId = 1002
+        val channelId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) "focus_fortress_achievements" else CHANNEL_ID
+
+        val notification = NotificationCompat.Builder(context, channelId)
+            .setContentTitle("Achievement Acquired")
+            .setContentText(achievementTitle)
+            .setSmallIcon(R.drawable.ic_launcher_monochrome)
+            .setAutoCancel(true)
+            .build()
+
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        manager.notify(notificationId, notification)
+    }
+
+
 }
