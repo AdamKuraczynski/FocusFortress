@@ -1,7 +1,9 @@
-package com.adamkuraczynski.focusfortress.database
+package com.adamkuraczynski.focusfortress
 
 import android.app.Application
 import androidx.room.Room
+import com.adamkuraczynski.focusfortress.database.AppDatabase
+import com.adamkuraczynski.focusfortress.service.WorkerScheduler
 
 
 class FocusFortressApp : Application() {
@@ -22,5 +24,8 @@ class FocusFortressApp : Application() {
         )
             .fallbackToDestructiveMigration()
             .build()
+
+        val workerScheduler = WorkerScheduler(this)
+        workerScheduler.scheduleDailyMotivationWorker()
     }
 }

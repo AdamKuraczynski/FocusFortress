@@ -1,5 +1,6 @@
 package com.adamkuraczynski.focusfortress.blocking
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -51,8 +52,10 @@ import com.adamkuraczynski.focusfortress.R
 import com.adamkuraczynski.focusfortress.database.BlockedWebsite
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import com.adamkuraczynski.focusfortress.ui.theme.DarkBrown
@@ -81,6 +84,24 @@ fun BlockWebsiteScreen(
     val textFieldFocusRequester = remember { FocusRequester() }
     val buttonFocusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvents.collect { event ->
+            when (event) {
+                is ToastEvent.ShowToast -> {
+                    val messages = listOf(
+                        "You've blocked ${event.count} website(s) so far. Keep up the good work!",
+                        "Another one bites the dust. Nice!",
+                        "Awesome, another brick for our Fortress!"
+                    )
+                    val message = messages.random()
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {

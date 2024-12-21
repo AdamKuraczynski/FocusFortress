@@ -6,11 +6,13 @@ import android.graphics.drawable.Drawable
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.adamkuraczynski.focusfortress.database.BlockedApp
-import com.adamkuraczynski.focusfortress.database.FocusFortressApp
+import com.adamkuraczynski.focusfortress.FocusFortressApp
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -49,11 +51,15 @@ class BlockAppViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    private val _uiEvents = MutableSharedFlow<ToastEvent>()
+    val uiEvents = _uiEvents.asSharedFlow()
     
     fun blockApp(packageName: String, appName: String) {
         viewModelScope.launch {
             val blockedApp = BlockedApp(packageName, appName)
             blockedAppDao.insertBlockedApp(blockedApp)
+            val count = blockedAppDao.getBlockedAppsCount()
+            _uiEvents.emit(ToastEvent.ShowToast("app", count))
         }
     }
 

@@ -1,6 +1,7 @@
 package com.adamkuraczynski.focusfortress.blocking
 
 import android.app.Application
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,6 +36,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -92,6 +94,24 @@ fun BlockAppScreen(
                 }
             }
             .filter { it.appName.contains(searchText, ignoreCase = true) }
+    }
+
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvents.collect { event ->
+            when (event) {
+                is ToastEvent.ShowToast -> {
+                    val messages = listOf(
+                        "You've blocked ${event.count} app(s) so far. Keep up the good work!",
+                        "Another one bites the dust. Nice!",
+                        "Awesome, another brick for our Fortress!"
+                    )
+                    val message = messages.random()
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     Scaffold(

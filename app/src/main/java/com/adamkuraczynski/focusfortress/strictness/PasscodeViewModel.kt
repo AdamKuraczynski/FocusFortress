@@ -2,7 +2,7 @@ package com.adamkuraczynski.focusfortress.strictness
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adamkuraczynski.focusfortress.database.FocusFortressApp
+import com.adamkuraczynski.focusfortress.FocusFortressApp
 import com.adamkuraczynski.focusfortress.database.Passcode
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

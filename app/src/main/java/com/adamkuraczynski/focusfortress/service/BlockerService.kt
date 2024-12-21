@@ -7,7 +7,7 @@ import android.content.Intent
 import android.net.Uri.parse
 import android.util.Log
 import com.adamkuraczynski.focusfortress.blocking.BlockedActivity
-import com.adamkuraczynski.focusfortress.database.FocusFortressApp
+import com.adamkuraczynski.focusfortress.FocusFortressApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

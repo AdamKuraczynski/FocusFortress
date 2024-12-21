@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.adamkuraczynski.focusfortress.database.Achievement
-import com.adamkuraczynski.focusfortress.database.FocusFortressApp
+import com.adamkuraczynski.focusfortress.FocusFortressApp
 import com.adamkuraczynski.focusfortress.service.NotificationHelper
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
