@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "passcode_table")
 data class Passcode(
     @PrimaryKey val id: Int = 1, // one pass only
-    val passcode: String
+    val passcodeHash: String,
+    val salt: String
 )

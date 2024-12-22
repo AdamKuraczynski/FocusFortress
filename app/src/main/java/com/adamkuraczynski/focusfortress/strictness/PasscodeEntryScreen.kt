@@ -32,7 +32,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,7 +66,6 @@ fun PasscodeEntryScreen(
 ) {
     val backgroundImage = painterResource(id = R.drawable.gate)
 
-    val passcodeState by passcodeViewModel.passcodeState.collectAsState()
     var passcode by remember { mutableStateOf("") }
     val context = LocalContext.current
 
@@ -203,13 +201,14 @@ fun PasscodeEntryScreen(
 
                         Button(
                             onClick = {
-                                val savedPasscode = passcodeState?.passcode
-                                if (passcode == savedPasscode) {
-                                    navController.navigate("main") {
-                                        popUpTo("passcodeEntry") { inclusive = true }
+                                passcodeViewModel.verifyPasscode(passcode) { isValid ->
+                                    if (isValid) {
+                                        navController.navigate("main") {
+                                            popUpTo("passcodeEntry") { inclusive = true }
+                                        }
+                                    } else {
+                                        Toast.makeText(context, "Incorrect Passcode", Toast.LENGTH_SHORT).show()
                                     }
-                                } else {
-                                    Toast.makeText(context, "Incorrect Passcode", Toast.LENGTH_SHORT).show()
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(

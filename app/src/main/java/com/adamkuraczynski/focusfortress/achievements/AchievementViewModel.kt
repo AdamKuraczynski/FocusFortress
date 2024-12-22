@@ -8,6 +8,7 @@ import com.adamkuraczynski.focusfortress.FocusFortressApp
 import com.adamkuraczynski.focusfortress.service.NotificationHelper
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -33,7 +34,7 @@ class AchievementsViewModel(application: Application) : AndroidViewModel(applica
 
     init {
         viewModelScope.launch {
-            val existingAchievements = achievementDao.getAllAchievements().stateIn(viewModelScope).value
+            val existingAchievements = achievementDao.getAllAchievements().first()
             if (existingAchievements.isEmpty()) {
                 insertAchievements(getAchievements())
             }
