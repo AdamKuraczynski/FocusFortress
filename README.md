@@ -9,7 +9,7 @@ Build with Kotlin, Jetpack Compose and Room.
 1. **Blocking Apps** – Block chosen apps.
 2. **Blocking Websites** – Intercept specific websites.  
 3. **Blocking Keywords** – Disallow specific keywords in the browser. 
-4. **Schedules** – Chose when blocking should occur.  
+4. **Schedules** – Choose when blocking should occur.  
 5. **Statistical Insights** – View usage time per app and the number of app launches.  
 6. **Strictness Levels** – Switch between "Normal" (no passcode) or "Protected" (requires a PIN/password).  
 7. **Achievements** – Track the user’s progress (e.g., block 5 apps, set a passcode, etc.).  
